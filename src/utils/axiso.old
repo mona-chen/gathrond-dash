@@ -1,0 +1,65 @@
+import axios from 'axios';
+import env from '../env';
+import { decrypt, encrypt } from './encrypt';
+
+const API = env.base_url;
+
+/** base url to make request to the BE end point */
+
+const instance = axios.create({
+	baseURL: API,
+});
+
+const proxy = {
+	encrypt: 'https://proxy.uncode.fun/encrypt',
+	decrypt: 'https://proxy.uncode.fun/decrypt',
+};
+
+instance.interceptors.request.use(
+	async (config) => {
+		try {
+			const encryptedData = await encrypt(config.data);
+
+			const { data } = await axios.post(proxy.encrypt, {
+				data: encryptedData,
+			});
+
+			config.data = { data: data };
+		} catch (error) {
+			logger.log(error);
+		}
+
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+instance.interceptors.response.use(
+	async (response) => {
+		const { data } = await axios.post(proxy.decrypt, {
+			data: response.data.data,
+		});
+
+		response.data.data = decrypt(data);
+
+		return response;
+	},
+	async (error) => {
+		let val;
+
+		if (error.response.data.status === 'fail') {
+			val = error.response;
+		}
+		const { data } = await axios.post(proxy.decrypt, {
+			data: val.data.data,
+		});
+
+		val.data.data = decrypt(data);
+
+		return val;
+	}
+);
+
+export default instance;
