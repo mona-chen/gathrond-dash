@@ -48,12 +48,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
  * the `IconVault` function.
  */
 
-export const IconVault = (
-	icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>
-): string => {
-	const svgString = renderToStaticMarkup(icon);
-	const utf8Svg = decodeURIComponent(encodeURIComponent(svgString));
-	const base64Svg = btoa(utf8Svg);
-	const dataUrl = `url("data:image/svg+xml;base64,${base64Svg}")`;
-	return dataUrl;
+export const IconVault = (icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>): string => {
+  const svgString = renderToStaticMarkup(icon);
+  const utf8Svg = decodeURIComponent(encodeURIComponent(svgString));
+  const base64Svg = btoa(utf8Svg);
+  const dataUrl = `url("data:image/svg+xml;base64,${base64Svg}")`;
+  return dataUrl;
 };

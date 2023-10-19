@@ -1,0 +1,52 @@
+.loader.simple-loader {
+  background-color: $loader-bg;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  place-content: center;
+  overflow: hidden !important;
+  right: 0px;
+  z-index: 1250;
+  .loader-body {
+    background: url(../images/logo.svg) no-repeat scroll center center;
+    background-size: 5%;
+    width: 100%;
+    animation:
+      bounce 1.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) infinite,
+      shadow 1.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) infinite;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    /* Increased shadow size */
+    height: 100%;
+    position: relative;
+  }
+
+  .loader-inner {
+    width: 100px;
+    /* Match the width of the logo */
+    height: 100px;
+    /* Match the height of the logo */
+    border-radius: 50%;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    background: radial-gradient(50% 50%, #fff -50%, #000 50%);
+    height: 50px;
+    width: 100px;
+    transform: translate(-50%, -50%);
+    /* animation: grow 1.5s ease-in-out infinite;  */
+    z-index: -1;
+  }
+
+  @keyframes bounce {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-15px);
+    }
+  }
+}

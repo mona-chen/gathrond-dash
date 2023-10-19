@@ -1,0 +1,71 @@
+import React from 'react';
+
+function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange }) {
+  const totalPages = Math.ceil(totalEntries / entriesPerPage);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <li key={i} className={`page-item ${i === currentPage ? 'active' : ''}`}>
+          <button className="page-link" onClick={() => handlePageChange(i)}>
+            {i}
+          </button>
+        </li>,
+      );
+    }
+    return pageNumbers;
+  };
+
+  return (
+    <div className="d-flex justify-content-between flex-wrap">
+      <div className="dataTables_info" id="example_info" role="status" aria-live="polite">
+        Showing {(currentPage - 1) * entriesPerPage + 1} to {Math.min(currentPage * entriesPerPage, totalEntries)} of{' '}
+        {totalEntries} entries
+      </div>
+      <nav aria-label="Page navigation example">
+        <ul className="pagination">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} aria-label="Previous">
+              <span aria-hidden="true">
+                <svg width="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M15.5 19L8.5 12L15.5 5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </button>
+          </li>
+          {renderPageNumbers()}
+          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} aria-label="Next">
+              <span aria-hidden="true">
+                <svg width="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M8.5 5L15.5 12L8.5 19"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+}
+
+export default Pagination;

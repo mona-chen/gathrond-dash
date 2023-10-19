@@ -1,327 +1,277 @@
 /* eslint-disable no-useless-concat */
 
-import moment from 'moment';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { logger } from '../../services/logger';
+
 // import { stringSimilarity } from "string-similarity";
 
 export const reactSelectStyle = {
-	control: (base, state) => ({
-		...base,
-		border: state.isFocused ? '0.1rem solid #6F6F6F' : '0.1rem solid #6F6F6F',
-		// backgroundColor: state.isSelected ? "#6F6F6F" : "white",
-		boxShadow: state.isFocused ? '0.1rem solid #6F6F6F' : 0,
-		'&:hover': {
-			// border: state.isFocused ? 0 : 0
-		},
-	}),
-	option: (provided, state) => ({
-		...provided,
-		backgroundColor: state.isSelected ? 'rgba(204, 204, 204, .3)' : 'white',
-		color: state.isSelected ? '#020202' : '#020202',
-	}),
+  control: (base, state) => ({
+    ...base,
+    border: state.isFocused ? '0.1rem solid #6F6F6F' : '0.1rem solid #6F6F6F',
+    // backgroundColor: state.isSelected ? "#6F6F6F" : "white",
+    boxShadow: state.isFocused ? '0.1rem solid #6F6F6F' : 0,
+    '&:hover': {
+      // border: state.isFocused ? 0 : 0
+    },
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? 'rgba(204, 204, 204, .3)' : 'white',
+    color: state.isSelected ? '#020202' : '#020202',
+  }),
 };
 
 export const formatNumWithoutCommaNaira = (number) => {
-	// const nairaSymbol = "\u{020A6}";
+  // const nairaSymbol = "\u{020A6}";
 
-	var regex = /[,\sN#%₦G]/g;
-	var result = String(number).replace(regex, '');
-	return result;
+  var regex = /[,\sN#%₦G]/g;
+  var result = String(number).replace(regex, '');
+  return result;
 };
 
 export const formatNumWithCommaNaira = (number) => {
-	var regex = /[,\sNG]/g;
-	var result = String(number).replace(regex, '');
-	var num = Math.abs(Number(result));
-	num = Number(num.toFixed(2));
-	const numSplit = num.toString().split('.');
-	var int = numSplit[0];
-	const dec = numSplit[1];
-	if (int.length > 3) {
-		int = int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-	}
+  var regex = /[,\sNG]/g;
+  var result = String(number).replace(regex, '');
+  var num = Math.abs(Number(result));
+  num = Number(num.toFixed(2));
+  const numSplit = num.toString().split('.');
+  var int = numSplit[0];
+  const dec = numSplit[1];
+  if (int.length > 3) {
+    int = int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
 
-	if (number) {
-		return int + '.' + dec;
-	}
+  if (number) {
+    return int + '.' + dec;
+  }
 
-	return '0' + '.' + '00';
+  return '0' + '.' + '00';
 };
 
 export const formatNumWithCommaNairaSymbol = (number) => {
-	const nairaSymbol = '\u{020A6}';
+  const nairaSymbol = '\u{020A6}';
 
-	var regex = /[,\sNG]/g;
-	var result = String(number).replace(regex, '');
-	var num = Math.abs(Number(result));
-	num = Number(num.toFixed(2));
-	const numSplit = num.toString().split('.');
-	var int = numSplit[0];
-	const dec = numSplit[1];
-	if (int.length > 3) {
-		int = int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-	}
+  var regex = /[,\sNG]/g;
+  var result = String(number).replace(regex, '');
+  var num = Math.abs(Number(result));
+  num = Number(num.toFixed(2));
+  const numSplit = num.toString().split('.');
+  var int = numSplit[0];
+  const dec = numSplit[1];
+  if (int.length > 3) {
+    int = int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
 
-	if (number) {
-		return nairaSymbol + '' + int + '.' + dec;
-	}
+  if (number) {
+    return nairaSymbol + '' + int + '.' + dec;
+  }
 
-	return nairaSymbol + '' + '0' + '.' + '00';
+  return nairaSymbol + '' + '0' + '.' + '00';
 };
 
-export const formatNumWithComma = (
-	number,
-	curr,
-	points
-) => {
-	if (typeof number === 'string') {
-		number = parseFloat(number);
-	}
+export const formatNumWithComma = (number, curr, points) => {
+  if (typeof number === 'string') {
+    number = parseFloat(number);
+  }
 
-	if (!curr) {
-		if (number >= 1e6) {
-			// Format number in millions (M)
-			return (
-				(number / 1e6)
-					.toFixed(points ?? 1)
-					.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'M'
-			);
-		} else if (number >= 1e3) {
-			// Format number in thousands (k)
-			return (
-				(number / 1e3)
-					.toFixed(points ?? 1)
-					.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'k'
-			);
-		} else {
-			return number?.toLocaleString(); // Add commas to numbers with less than 1 thousand
-		}
-	} else {
-		const regex = /[,\sNG]/g;
-		const result = String(number).replace(regex, '');
-		const num = Math.abs(Number(result));
-		const numSplit = num.toFixed(2).split('.');
-		let int = numSplit[0];
-		const dec = numSplit[1];
+  if (!curr) {
+    if (number >= 1e6) {
+      // Format number in millions (M)
+      return (number / 1e6).toFixed(points ?? 1).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'M';
+    } else if (number >= 1e3) {
+      // Format number in thousands (k)
+      return (number / 1e3).toFixed(points ?? 1).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'k';
+    } else {
+      return number?.toLocaleString(); // Add commas to numbers with less than 1 thousand
+    }
+  } else {
+    const regex = /[,\sNG]/g;
+    const result = String(number).replace(regex, '');
+    const num = Math.abs(Number(result));
+    const numSplit = num.toFixed(2).split('.');
+    let int = numSplit[0];
+    const dec = numSplit[1];
 
-		if (int.length > 3) {
-			int = int.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-		}
+    if (int.length > 3) {
+      int = int.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
 
-		if (number) {
-			return int + '.' + dec;
-		}
+    if (number) {
+      return int + '.' + dec;
+    }
 
-		return '0';
-	}
+    return '0';
+  }
 };
 
 export const getTotalPage = (perpage, totalNum) => {
-	const val = Math.ceil(Number(totalNum) / Number(perpage));
-	// logger.log(val);
-	return val;
+  const val = Math.ceil(Number(totalNum) / Number(perpage));
+  // logger.log(val);
+  return val;
 };
 
 export const generateReference = () => {
-	let text = '';
-	const possible =
-		'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	for (let i = 0; i < 10; i++)
-		text += possible.charAt(Math.floor(Math.random() * possible.length));
-	return text;
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < 10; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return text;
 };
 
 export function formatDate(date) {
-	const year = String(date.getFullYear());
-	const month = String(date.getMonth() + 1).padStart(2, '0');
-	const day = String(date.getDate()).padStart(2, '0');
+  const year = String(date.getFullYear());
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
 
-	return `${year}/${month}/${day}`;
+  return `${year}/${month}/${day}`;
 }
 
 export function numberFormatChart(num, digits) {
-	const lookup = [
-		{ value: 1, symbol: '' },
-		{ value: 1e3, symbol: 'k' },
-		{ value: 1e6, symbol: 'M' },
-		{ value: 1e9, symbol: 'B' },
-		{ value: 1e12, symbol: 'T' },
-		{ value: 1e15, symbol: 'Q' },
-		{ value: 1e18, symbol: 'QT' },
-		{ value: 1e21, symbol: 'QQ' },
-	];
-	const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-	var item = lookup
-		.slice()
-		.reverse()
-		.find(function (item) {
-			return num >= item.value;
-		});
-	if (item && item.symbol === 'M') {
-		// const formattedNum = (num / item.value).toFixed(digits);
-		// const integerPart = formattedNum.split(".")[0];
-		// const decimalPart = formattedNum.split(".")[1];
-		// return `${integerPart}.${decimalPart}${item.symbol}`;
-	}
-	return item
-		? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol
-		: '0';
+  const lookup = [
+    { value: 1, symbol: '' },
+    { value: 1e3, symbol: 'k' },
+    { value: 1e6, symbol: 'M' },
+    { value: 1e9, symbol: 'B' },
+    { value: 1e12, symbol: 'T' },
+    { value: 1e15, symbol: 'Q' },
+    { value: 1e18, symbol: 'QT' },
+    { value: 1e21, symbol: 'QQ' },
+  ];
+  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+  var item = lookup
+    .slice()
+    .reverse()
+    .find(function (item) {
+      return num >= item.value;
+    });
+  if (item && item.symbol === 'M') {
+    // const formattedNum = (num / item.value).toFixed(digits);
+    // const integerPart = formattedNum.split(".")[0];
+    // const decimalPart = formattedNum.split(".")[1];
+    // return `${integerPart}.${decimalPart}${item.symbol}`;
+  }
+  return item ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol : '0';
 }
 
 export const formatMetaData = (obj) => {
-	if (obj) {
-		const newObj = JSON?.parse(obj);
-		// logger.log(newObj);
-		return newObj;
-	}
+  if (obj) {
+    const newObj = JSON?.parse(obj);
+    // logger.log(newObj);
+    return newObj;
+  }
 };
 
 export const getPageNum = (link) => {
-	if (link) {
-		const num = link?.split('&current_page=')[1]?.split('&')[0];
-		return num;
-	}
+  if (link) {
+    const num = link?.split('&current_page=')[1]?.split('&')[0];
+    return num;
+  }
 };
 
 export const sumAllNum = (list) => {
-	if (list) {
-		const sumVal = list.reduce((a, b) => a + b, 0);
-		return sumVal;
-	}
+  if (list) {
+    const sumVal = list.reduce((a, b) => a + b, 0);
+    return sumVal;
+  }
 };
 
 export const removeCountryCode = (num) => {
-	if (num) {
-		const val =
-			num.slice(0, 3) === '234'
-				? num.replace('234', '0')
-				: num.slice(0, 1) === '0'
-				? num.replace('0', '')
-				: num;
-		return val;
-	}
+  if (num) {
+    const val =
+      num.slice(0, 3) === '234' ? num.replace('234', '0') : num.slice(0, 1) === '0' ? num.replace('0', '') : num;
+    return val;
+  }
 };
 
 export const capitalizeFirstLetter = (str) => {
-	if (str) {
-		let capitalizedStr = str.charAt(0).toUpperCase() + str.slice(1);
-		return capitalizedStr;
-	}
+  if (str) {
+    let capitalizedStr = str.charAt(0).toUpperCase() + str.slice(1);
+    return capitalizedStr;
+  }
 };
 
 export const formatStatus = (param) => {
-	if (param) {
-		const val =
-			param === '0'
-				? 'pending'
-				: param === '1'
-				? 'processing'
-				: param === '2'
-				? 'success'
-				: param === '3'
-				? 'failed'
-				: '--';
-		return val;
-	}
+  if (param) {
+    const val =
+      param === '0'
+        ? 'pending'
+        : param === '1'
+        ? 'processing'
+        : param === '2'
+        ? 'success'
+        : param === '3'
+        ? 'failed'
+        : '--';
+    return val;
+  }
 };
 
 export const removeSpace = (str) => {
-	const val = str.replace(/\s+/g, '');
-	// logger.log(val);
-	return val;
+  const val = str.replace(/\s+/g, '');
+  // logger.log(val);
+  return val;
 };
 
 export const trimLongString = (str, num) => {
-	if (str && num) {
-		const val =
-			String(str).length > Number(num)
-				? `${String(str).slice(0, Number(num))}...`
-				: str;
-		return val;
-	}
+  if (str && num) {
+    const val = String(str).length > Number(num) ? `${String(str).slice(0, Number(num))}...` : str;
+    return val;
+  }
 };
 
 export const getPosTerminalRequest = (list) => {
-	if (list?.length > 0) {
-		const status = list[0]?.status;
-		return status;
-	}
+  if (list?.length > 0) {
+    const status = list[0]?.status;
+    return status;
+  }
 };
 
 export const formatTitleTemplate = (text) => {
-	var regex = /[,\s_.csvNG]/g;
-	var result = String(text).replace(regex, ' ');
-	return result;
+  var regex = /[,\s_.csvNG]/g;
+  var result = String(text).replace(regex, ' ');
+  return result;
 };
 
 export const formatNUmPan = (str) => {
-	if (str) {
-		const val = `${str?.slice(0, 6)}******${str?.slice(
-			str?.length - 4,
-			str?.length
-		)}`;
-		return val;
-	}
+  if (str) {
+    const val = `${str?.slice(0, 6)}******${str?.slice(str?.length - 4, str?.length)}`;
+    return val;
+  }
 };
 
 export const lowerCaseWrap = (text) => {
-	if (text) {
-		const lowerText = text.toLowerCase();
-		let capitalizedStr = lowerText
-			.split(' ')
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(' ');
-		return capitalizedStr;
-	}
+  if (text) {
+    const lowerText = text.toLowerCase();
+    let capitalizedStr = lowerText
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+    return capitalizedStr;
+  }
 };
 
 export const formatTypeFunction = (str) => {
-	let val;
-	if (str) {
-		if (!str?.includes('_')) {
-			return str;
-		}
-		const splitStr = str.split('_');
-		// logger.log(splitStr);
-		if (splitStr.length === 1 && str?.includes('_')) {
-			const newText = `${splitStr[0] || ''}`;
-			val = lowerCaseWrap(newText);
-		}
-		if (splitStr.length === 2 && str?.includes('_')) {
-			const newText = `${splitStr[0] || ''} ${splitStr[1] || ''}`;
-			val = lowerCaseWrap(newText);
-		}
-		if (splitStr.length === 3 && str?.includes('_')) {
-			const newText = `${splitStr[0] || ''} ${splitStr[1] || ''} ${
-				splitStr[2] || ''
-			}`;
-			val = lowerCaseWrap(newText);
-		}
-		// logger.log(val);
-		return val;
-	}
-};
-
-export const getStartAndStopDates = (param) => {
-	if (param) {
-		// get the current date
-		var currentDate = moment();
-
-		// subtract 7 days from the current date moment(currentDate).subtract(daysToSubtract, 'days')
-		var actualDate = moment(currentDate).subtract(param, 'days');
-
-		const fromDate = actualDate.format('YYYY-MM-DD');
-
-		const toDate = currentDate.format('YYYY-MM-DD');
-
-		const obj = {
-			start_date: fromDate,
-			end_date: toDate,
-		};
-
-		return obj;
-	}
+  let val;
+  if (str) {
+    if (!str?.includes('_')) {
+      return str;
+    }
+    const splitStr = str.split('_');
+    // logger.log(splitStr);
+    if (splitStr.length === 1 && str?.includes('_')) {
+      const newText = `${splitStr[0] || ''}`;
+      val = lowerCaseWrap(newText);
+    }
+    if (splitStr.length === 2 && str?.includes('_')) {
+      const newText = `${splitStr[0] || ''} ${splitStr[1] || ''}`;
+      val = lowerCaseWrap(newText);
+    }
+    if (splitStr.length === 3 && str?.includes('_')) {
+      const newText = `${splitStr[0] || ''} ${splitStr[1] || ''} ${splitStr[2] || ''}`;
+      val = lowerCaseWrap(newText);
+    }
+    // logger.log(val);
+    return val;
+  }
 };
 
 /**
@@ -333,20 +283,20 @@ export const getStartAndStopDates = (param) => {
  */
 
 export const mapHotkey = (key, func) => {
-	const handleKeyDown = (event) => {
-		// Check if Cmd + D is pressed
-		if (event.metaKey && event.key === key) {
-			func();
-		}
-	};
+  const handleKeyDown = (event) => {
+    // Check if Cmd + D is pressed
+    if (event.metaKey && event.key === key) {
+      func();
+    }
+  };
 
-	// Add event listener when the component mounts
-	window.addEventListener('keydown', handleKeyDown);
+  // Add event listener when the component mounts
+  window.addEventListener('keydown', handleKeyDown);
 
-	// Clean up the event listener when the component unmounts
-	return () => {
-		window.removeEventListener('keydown', handleKeyDown);
-	};
+  // Clean up the event listener when the component unmounts
+  return () => {
+    window.removeEventListener('keydown', handleKeyDown);
+  };
 };
 
 /**
@@ -356,22 +306,22 @@ export const mapHotkey = (key, func) => {
  * @returns string
  */
 export function formatDateTime(date) {
-	const parsedDate = new Date(date);
+  const parsedDate = new Date(date);
 
-	if (isNaN(parsedDate.getTime())) {
-		return 'Invalid Date';
-	}
+  if (isNaN(parsedDate.getTime())) {
+    return 'Invalid Date';
+  }
 
-	const options = {
-		day: 'numeric',
-		month: 'short',
-		year: 'numeric',
-		hour: 'numeric',
-		minute: 'numeric',
-		hour12: true,
-	};
+  const options = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
 
-	return new Intl.DateTimeFormat('en-US', options).format(parsedDate);
+  return new Intl.DateTimeFormat('en-US', options).format(parsedDate);
 }
 
 /**
@@ -422,41 +372,39 @@ export function formatDateTime(date) {
  * the `IconVault` function.
  */
 
-export const IconVault = (
-	icon
-) => {
-	const svgString = renderToStaticMarkup(icon);
-	const utf8Svg = decodeURIComponent(encodeURIComponent(svgString));
-	const base64Svg = btoa(utf8Svg);
-	const dataUrl = `data:image/svg+xml;base64,${base64Svg}`;
-	return dataUrl;
+export const IconVault = (icon) => {
+  const svgString = renderToStaticMarkup(icon);
+  const utf8Svg = decodeURIComponent(encodeURIComponent(svgString));
+  const base64Svg = btoa(utf8Svg);
+  const dataUrl = `data:image/svg+xml;base64,${base64Svg}`;
+  return dataUrl;
 };
 
 export function symbol(wallet) {
-	if (wallet === 'ngn') {
-		return '₦';
-	} else if (wallet === 'usd') {
-		return '$';
-	} else if (wallet === 'gbp') {
-		return '£';
-	} else if (wallet === 'rf' || wallet === 'rwf') {
-		return 'Fr';
-	} else if (wallet === 'ksh' || wallet === 'khs') {
-		return 'KSh';
-	} else if (wallet === 'eur') {
-		return '€';
-	} else {
-		return ''; // Default case if wallet is not recognized
-	}
+  if (wallet === 'ngn') {
+    return '₦';
+  } else if (wallet === 'usd') {
+    return '$';
+  } else if (wallet === 'gbp') {
+    return '£';
+  } else if (wallet === 'rf' || wallet === 'rwf') {
+    return 'Fr';
+  } else if (wallet === 'ksh' || wallet === 'khs') {
+    return 'KSh';
+  } else if (wallet === 'eur') {
+    return '€';
+  } else {
+    return ''; // Default case if wallet is not recognized
+  }
 }
 
 export function returnInitial(name) {
-	const i = name?.split(' ');
-	if (i.length > 1) {
-		return i[0]?.slice(0, 1).toUpperCase() + i[1]?.slice(0, 1).toUpperCase();
-	} else {
-		return i[0]?.slice(0, 1).toUpperCase();
-	}
+  const i = name?.split(' ');
+  if (i.length > 1) {
+    return i[0]?.slice(0, 1).toUpperCase() + i[1]?.slice(0, 1).toUpperCase();
+  } else {
+    return i[0]?.slice(0, 1).toUpperCase();
+  }
 }
 
 /**
@@ -475,117 +423,102 @@ export function returnInitial(name) {
  *  const search = insertUrlParam;
  * <button onclick={() => search('q', 'Mona Lee')}/>
  */
-export function insertUrlParam(
-	key,
-	value,
-	title = '',
-	preserve_hash = false
-) {
-	let searchParams = new URLSearchParams(window.location.search);
-	searchParams.set(key, value);
-	let newurl =
-		window.location.protocol +
-		'//' +
-		window.location.host +
-		window.location.pathname +
-		'?' +
-		searchParams.toString();
-	if (preserve_hash) newurl = newurl + window.location.hash;
-	let oldTitle = document.title;
-	if (title !== '') {
-		window.history.replaceState({ path: newurl }, title, newurl);
-		if (document.title !== title) {
-			// fallback if above doesn't work
-			document.title = title;
-		}
-	} else {
-		// in case browsers ever clear titles set with empty string
-		window.history.replaceState({ path: newurl }, oldTitle, newurl);
-	}
+export function insertUrlParam(key, value, title = '', preserve_hash = false) {
+  let searchParams = new URLSearchParams(window.location.search);
+  searchParams.set(key, value);
+  let newurl =
+    window.location.protocol + '//' + window.location.host + window.location.pathname + '?' + searchParams.toString();
+  if (preserve_hash) newurl = newurl + window.location.hash;
+  let oldTitle = document.title;
+  if (title !== '') {
+    window.history.replaceState({ path: newurl }, title, newurl);
+    if (document.title !== title) {
+      // fallback if above doesn't work
+      document.title = title;
+    }
+  } else {
+    // in case browsers ever clear titles set with empty string
+    window.history.replaceState({ path: newurl }, oldTitle, newurl);
+  }
 }
 
 export function removeUrlParam(key, title = '', preserve_hash = false) {
-	let searchParams = new URLSearchParams(window.location.search);
-	searchParams.delete(key);
-	let newurl =
-		window.location.protocol +
-		'//' +
-		window.location.host +
-		window.location.pathname +
-		(searchParams.toString() !== '' ? '?' + searchParams.toString() : '');
-	if (preserve_hash) newurl = newurl + window.location.hash;
-	let oldTitle = document.title;
-	if (title !== '') {
-		window.history.replaceState({ path: newurl }, title, newurl);
-		if (document.title !== title) {
-			// fallback if above doesn't work
-			document.title = title;
-		}
-	} else {
-		// in case browsers ever clear titles set with empty string
-		window.history.replaceState({ path: newurl }, oldTitle, newurl);
-	}
+  let searchParams = new URLSearchParams(window.location.search);
+  searchParams.delete(key);
+  let newurl =
+    window.location.protocol +
+    '//' +
+    window.location.host +
+    window.location.pathname +
+    (searchParams.toString() !== '' ? '?' + searchParams.toString() : '');
+  if (preserve_hash) newurl = newurl + window.location.hash;
+  let oldTitle = document.title;
+  if (title !== '') {
+    window.history.replaceState({ path: newurl }, title, newurl);
+    if (document.title !== title) {
+      // fallback if above doesn't work
+      document.title = title;
+    }
+  } else {
+    // in case browsers ever clear titles set with empty string
+    window.history.replaceState({ path: newurl }, oldTitle, newurl);
+  }
 }
 
-export const searchParams = new URLSearchParams(
-	document.location.search
-);
+export const searchParams = new URLSearchParams(document.location.search);
 
-export function removeCommaAndNairaSign(str ) {
-	// Remove commas from the string
-	const stringWithoutCommas = String(str).replace(/,/g, '');
+export function removeCommaAndNairaSign(str) {
+  // Remove commas from the string
+  const stringWithoutCommas = String(str).replace(/,/g, '');
 
-	// Remove the Nigerian Naira sign (₦) from the string
-	const stringWithoutNairaSign = stringWithoutCommas.replace(/₦/g, '');
+  // Remove the Nigerian Naira sign (₦) from the string
+  const stringWithoutNairaSign = stringWithoutCommas.replace(/₦/g, '');
 
-	// Return the modified string
-	return stringWithoutNairaSign;
+  // Return the modified string
+  return stringWithoutNairaSign;
 }
 
 export const handleCopy = (data, setState, stateValue) => {
-	navigator.clipboard.writeText(data);
+  navigator.clipboard.writeText(data);
 
-	setState(stateValue || true);
+  setState(stateValue || true);
 
-	setTimeout(() => {
-		setState(false);
-	}, 1000);
-	// You can add any additional logic or feedback here, like showing a tooltip or toast message.
+  setTimeout(() => {
+    setState(false);
+  }, 1000);
+  // You can add any additional logic or feedback here, like showing a tooltip or toast message.
 };
 
-export const genCaptchaKeyAsync = async (param ) => {
-	try {
-		const token = await window.grecaptcha.execute(param, {
-			action: 'validate_captcha',
-		});
-		return token;
-	} catch (e) {
-		logger.log(e, 'captcha error');
-		return 'error_string';
-	}
+export const genCaptchaKeyAsync = async (param) => {
+  try {
+    const token = await window.grecaptcha.execute(param, {
+      action: 'validate_captcha',
+    });
+    return token;
+  } catch (e) {
+    return 'error_string';
+  }
 };
 
 export const setCookie = (name, value, seconds) => {
-	const expirationDate = new Date();
-	expirationDate.setTime(expirationDate.getTime() + seconds * 1000); // Convert seconds to milliseconds
+  const expirationDate = new Date();
+  expirationDate.setTime(expirationDate.getTime() + seconds * 1000); // Convert seconds to milliseconds
 
-	const cookieValue =
-		encodeURIComponent(value) +
-		(seconds ? `; expires=${expirationDate.toUTCString()}` : '');
+  const cookieValue = encodeURIComponent(value) + (seconds ? `; expires=${expirationDate.toUTCString()}` : '');
 
-	document.cookie = `${name}=${cookieValue}; path=/`;
+  document.cookie = `${name}=${cookieValue}; path=/`;
 };
 
 export function getCookie(name) {
-	const cookies = document.cookie.split(';');
-	for (let i = 0; i < cookies.length; i++) {
-		const cookie = cookies[i].trim();
-		// Check if this cookie is the one we're looking for
-		if (cookie.startsWith(name + '=')) {
-			// Return the value of the cookie
-			return decodeURIComponent(cookie.substring(name.length + 1));
-		}
-	}
-	// If the cookie is not found, return null
-	return null;
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    // Check if this cookie is the one we're looking for
+    if (cookie.startsWith(name + '=')) {
+      // Return the value of the cookie
+      return decodeURIComponent(cookie.substring(name.length + 1));
+    }
+  }
+  // If the cookie is not found, return null
+  return null;
 }

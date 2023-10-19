@@ -1,3 +1,7 @@
+import { bootstrap } from 'bootstrap';
+import { Waypoint } from 'waypoints';
+import noUiSlider from 'no-ui-slider';
+
 /*
 Template: nairobi - Responsive Bootstrap 5 Admin Dashboard Template
 Author: iqonic.design
@@ -34,54 +38,51 @@ Index Of Script
 ------------------------------------------------
 Index Of Script
 ----------------------------------------------*/
-"use strict";
 /*---------------------------------------------------------------------
               Popover
 -----------------------------------------------------------------------*/
 
-var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-  return new bootstrap.Popover(popoverTriggerEl)
-})
+  return new bootstrap.Popover(popoverTriggerEl);
+});
 
 /*---------------------------------------------------------------------
                 Tooltip
 -----------------------------------------------------------------------*/
 
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
+  return new bootstrap.Tooltip(tooltipTriggerEl);
+});
 
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-sidebar-toggle="tooltip"]'))
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-sidebar-toggle="tooltip"]'));
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
-
-
+  return new bootstrap.Tooltip(tooltipTriggerEl);
+});
 
 /*---------------------------------------------------------------------
 Progress Bar
 -----------------------------------------------------------------------*/
 const progressBarInit = (elem) => {
-  const currentValue = elem.getAttribute('aria-valuenow')
-  elem.style.width = '0%'
-  elem.style.transition = 'width 2s'
-  new Waypoint( {
+  const currentValue = elem.getAttribute('aria-valuenow');
+  elem.style.width = '0%';
+  elem.style.transition = 'width 2s';
+  new Waypoint({
     element: elem,
-    handler: function() { 
+    handler: function () {
       setTimeout(() => {
-        elem.style.width = currentValue + '%'
+        elem.style.width = currentValue + '%';
       }, 100);
     },
     offset: 'bottom-in-view',
-  })
-}
+  });
+};
 
-const customProgressBar = document.querySelectorAll('[data-toggle="progress-bar"]')
+const customProgressBar = document.querySelectorAll('[data-toggle="progress-bar"]');
 Array.from(customProgressBar, (elem) => {
-  progressBarInit(elem)
-})
+  progressBarInit(elem);
+});
 
 /*---------------------------------------------------------------------
                  noUiSlider
@@ -94,11 +95,11 @@ Array.from(rangeSlider, (elem) => {
     start: [20, 80],
     connect: true,
     range: {
-        'min': 0,
-        'max': 100
-    }
-  })
-})
+      min: 0,
+      max: 100,
+    },
+  });
+});
 
 const slider = document.querySelectorAll('.slider');
 
@@ -107,20 +108,20 @@ Array.from(slider, (elem) => {
     start: 50,
     connect: [true, false],
     range: {
-        'min': 0,
-        'max': 100
-    }
-  })
-})
+      min: 0,
+      max: 100,
+    },
+  });
+});
 
 /*---------------------------------------------------------------------
               Copy To Clipboard
 -----------------------------------------------------------------------*/
-const copy = document.querySelectorAll('[data-toggle="copy"]')
+const copy = document.querySelectorAll('[data-toggle="copy"]');
 Array.from(copy, (elem) => {
   elem.addEventListener('click', (e) => {
-    const target = elem.getAttribute("data-copy-target");
-    let value = elem.getAttribute("data-copy-value");
+    const target = elem.getAttribute('data-copy-target');
+    let value = elem.getAttribute('data-copy-value');
     const container = document.querySelector(target);
     if (container !== undefined && container !== null) {
       if (container.value !== undefined && container.value !== null) {
@@ -130,34 +131,34 @@ Array.from(copy, (elem) => {
       }
     }
     if (value !== null) {
-      const elem = document.createElement("input");
-      document.querySelector("body").appendChild(elem);
+      const elem = document.createElement('input');
+      document.querySelector('body').appendChild(elem);
       elem.value = value;
       elem.select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       elem.remove();
     }
-  })
+  });
 });
 
 /*---------------------------------------------------------------------
               Vanila Datepicker
 -----------------------------------------------------------------------*/
-const datepickers = document.querySelectorAll('.vanila-datepicker')
-Array.from(datepickers, (elem) => {
-  new Datepicker(elem)
-})
-const daterangePickers = document.querySelectorAll('.vanila-daterangepicker')
-Array.from(daterangePickers, (elem) => {
-  new DateRangePicker(elem)
-})
+// const datepickers = document.querySelectorAll('.vanila-datepicker')
+// Array.from(datepickers, (elem) => {
+//   new Datepicker(elem)
+// })
+// const daterangePickers = document.querySelectorAll('.vanila-daterangepicker')
+// Array.from(daterangePickers, (elem) => {
+//   new DateRangePicker(elem)
+// })
 
 /*---------------------------------------------------------------------
               CounterUp 2
 -----------------------------------------------------------------------*/
 if (window.counterUp !== undefined) {
-  const counterUp = window.counterUp["default"];
-  const counterUp2 = document.querySelectorAll( '.counter' )
+  const counterUp = window.counterUp['default'];
+  const counterUp2 = document.querySelectorAll('.counter');
   Array.from(counterUp2, (el) => {
     const waypoint = new Waypoint({
       element: el,
@@ -168,35 +169,66 @@ if (window.counterUp !== undefined) {
         });
         this.destroy();
       },
-      offset: "bottom-in-view",
+      offset: 'bottom-in-view',
     });
-  })
+  });
 }
 
 // Smooth Scollbar
-let Scrollbar
-if (jQuery(".data-scrollbar").length) {
-  Scrollbar = window.Scrollbar
-  Scrollbar.init(document.querySelector('.data-scrollbar'), {
-    continuousScrolling: false,
-  })
+let Scrollbar;
+
+const dataScrollbarElements = document.querySelectorAll('.data-scrollbar');
+
+if (dataScrollbarElements.length > 0) {
+  // Assuming that the "Scrollbar" is a global object
+  if (window.Scrollbar) {
+    Scrollbar = window.Scrollbar;
+
+    dataScrollbarElements.forEach(function (dataScrollbar) {
+      Scrollbar.init(dataScrollbar, {
+        continuousScrolling: false,
+      });
+    });
+  }
 }
 
 /*---------------------------------------------------------------------
   Active Class for Pricing Table
 -----------------------------------------------------------------------*/
-jQuery("#my-table tr th").on('click',function () {
-  jQuery('#my-table tr th').children().removeClass('active');
-  jQuery(this).children().addClass('active');
-  jQuery("#my-table td").each(function () {
-    if (jQuery(this).hasClass('active')) {
-      jQuery(this).removeClass('active')
-    }
-  });
-  var col = jQuery(this).index();
-  jQuery("#my-table tr td:nth-child(" + parseInt(col + 1) + ")").addClass('active');
-});
+// Select the table header cells and add a click event listener to each of them
+const tableHeaderCells = document.querySelectorAll('#my-table tr th');
+tableHeaderCells.forEach(function (cell) {
+  cell.addEventListener('click', function () {
+    // Remove the "active" class from all children of table header cells
+    const headerCellChildren = this.querySelectorAll('*');
+    headerCellChildren.forEach(function (child) {
+      child.classList.remove('active');
+    });
 
+    // Add the "active" class to the clicked table header cell's children
+    const thisHeaderCellChildren = this.querySelectorAll('*');
+    thisHeaderCellChildren.forEach(function (child) {
+      child.classList.add('active');
+    });
+
+    // Remove the "active" class from all table data cells
+    const tableDataCells = document.querySelectorAll('#my-table td');
+    tableDataCells.forEach(function (dataCell) {
+      if (dataCell.classList.contains('active')) {
+        dataCell.classList.remove('active');
+      }
+    });
+
+    // Get the index of the clicked table header cell
+    const col = Array.from(this.parentNode.children).indexOf(this);
+
+    // Add the "active" class to the corresponding table data cells in the same column
+    const tableDataCellsInColumn = document.querySelectorAll(`#my-table tr td:nth-child(${col + 1})`);
+    tableDataCellsInColumn.forEach(function (dataCell) {
+      dataCell.classList.add('active');
+    });
+  });
+});
 
 /*---------------------------------------------------------------------
               Resize Plugins
@@ -204,17 +236,21 @@ jQuery("#my-table tr th").on('click',function () {
 
 const resizePlugins = () => {
   // sidebar-mini
-  const tabs = document.querySelectorAll('.nav')
-  const sidebarResponsive = document.querySelector('.sidebar-default')
+  const tabs = document.querySelectorAll('.nav');
+  const sidebarResponsive = document.querySelector('.sidebar-default');
   if (window.innerWidth < 991) {
     Array.from(tabs, (elem) => {
-      if (!elem.classList.contains('flex-column') && elem.classList.contains('nav-tabs') && elem.classList.contains('nav-pills')) {
+      if (
+        !elem.classList.contains('flex-column') &&
+        elem.classList.contains('nav-tabs') &&
+        elem.classList.contains('nav-pills')
+      ) {
         elem.classList.add('flex-column', 'on-resize');
       }
-    })
-    if(sidebarResponsive !== null) {
+    });
+    if (sidebarResponsive !== null) {
       if (!sidebarResponsive.classList.contains('sidebar-mini')) {
-        sidebarResponsive.classList.add('sidebar-mini','on-resize')
+        sidebarResponsive.classList.add('sidebar-mini', 'on-resize');
       }
     }
   } else {
@@ -222,294 +258,290 @@ const resizePlugins = () => {
       if (elem.classList.contains('on-resize')) {
         elem.classList.remove('flex-column', 'on-resize');
       }
-    })
-    if(sidebarResponsive !== null) {
+    });
+    if (sidebarResponsive !== null) {
       if (sidebarResponsive.classList.contains('sidebar-mini') && sidebarResponsive.classList.contains('on-resize')) {
-        sidebarResponsive.classList.remove('sidebar-mini','on-resize')
+        sidebarResponsive.classList.remove('sidebar-mini', 'on-resize');
       }
     }
   }
-}
-
+};
 
 /*---------------------------------------------------------------------
               LoaderInit
 -----------------------------------------------------------------------*/
 
 const loaderInit = () => {
-  const loader = document.querySelector('.loader')
+  const loader = document.querySelector('.loader');
   setTimeout(() => {
-    loader.classList.add('animate__animated', 'animate__fadeOut')
+    loader.classList.add('animate__animated', 'animate__fadeOut');
     setTimeout(() => {
-      loader.classList.add('d-none')
-    }, 500)
-  }, 500)
-}
+      loader.classList.add('d-none');
+    }, 500);
+  }, 500);
+};
 
 /*---------------------------------------------------------------------
               Sidebar Toggle
 -----------------------------------------------------------------------*/
 const sidebarToggle = (elem) => {
   elem.addEventListener('click', (e) => {
-    const sidebar = document.querySelector('.sidebar')
+    const sidebar = document.querySelector('.sidebar');
     if (sidebar.classList.contains('sidebar-mini')) {
-      sidebar.classList.remove('sidebar-mini')
+      sidebar.classList.remove('sidebar-mini');
     } else {
-      sidebar.classList.add('sidebar-mini')
+      sidebar.classList.add('sidebar-mini');
     }
-  })
-}
+  });
+};
 
-const sidebarToggleBtn = document.querySelectorAll('[data-toggle="sidebar"]')
-const sidebar = document.querySelector('.sidebar-default')
+const sidebarToggleBtn = document.querySelectorAll('[data-toggle="sidebar"]');
+const sidebar = document.querySelector('.sidebar-default');
 if (sidebar !== null) {
-  const sidebarActiveItem = sidebar.querySelectorAll('.active')
+  const sidebarActiveItem = sidebar.querySelectorAll('.active');
   Array.from(sidebarActiveItem, (elem) => {
     if (!elem.closest('ul').classList.contains('iq-main-menu')) {
-      const childMenu = elem.closest('ul')
-      childMenu.classList.add('show')
-      const parentMenu = childMenu.closest('li').querySelector('.nav-link')
-      parentMenu.classList.add('collapsed')
-      parentMenu.setAttribute('aria-expanded', true)
+      const childMenu = elem.closest('ul');
+      childMenu.classList.add('show');
+      const parentMenu = childMenu.closest('li').querySelector('.nav-link');
+      parentMenu.classList.add('collapsed');
+      parentMenu.setAttribute('aria-expanded', true);
     }
-  })
+  });
 }
 Array.from(sidebarToggleBtn, (sidebarBtn) => {
-  sidebarToggle(sidebarBtn)
-})
+  sidebarToggle(sidebarBtn);
+});
 
 /*------------------------
 Back To Top
 --------------------------*/
-$('#back-to-top').fadeOut();
-  $(window).on("scroll", function() {
-    if ($(this).scrollTop() > 250) {
-      $('#back-to-top').fadeIn(1400);
-    } 
-    else {
-      $('#back-to-top').fadeOut(400);
-    }
-  });
-// scroll body to 0px on click
-  $('#top').on('click', function() {
-    $('top').tooltip('hide');
-    $('body,html').animate({
-      scrollTop: 0
-    }, 0);
+const backToTopButton = document.getElementById('back-to-top');
+
+window.addEventListener('scroll', function () {
+  if (window.scrollY > 250) {
+    fadeIn(backToTopButton, 1400);
+  } else {
+    fadeOut(backToTopButton, 400);
+  }
+});
+
+backToTopButton.addEventListener('click', function () {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
   return false;
 });
+
+function fadeIn(element, duration) {
+  element.style.transition = `opacity ${duration}ms`;
+  element.style.opacity = 1;
+}
+
+function fadeOut(element, duration) {
+  element.style.transition = `opacity ${duration}ms`;
+  element.style.opacity = 0;
+}
 
 /*---------------------------------------------------------------------
               DOMContentLoaded
 -----------------------------------------------------------------------*/
 document.addEventListener('DOMContentLoaded', (event) => {
-  resizePlugins()
-  loaderInit()
+  resizePlugins();
+  loaderInit();
 });
 
 /*---------------------------------------------------------------------
               Window Resize
 -----------------------------------------------------------------------*/
 
-window.addEventListener('resize', function(event) {
-  resizePlugins()
+window.addEventListener('resize', function (event) {
+  resizePlugins();
 });
 
 /*-------------------------------
 | | | | | DropDown
 --------------------------------*/
 
-function darken_screen(yesno){
-  if( yesno == true ){
+function darken_screen(yesno) {
+  if (yesno == true) {
     document.querySelector('.screen-darken').classList.add('active');
-  }
-  else if(yesno == false){
+  } else if (yesno == false) {
     document.querySelector('.screen-darken').classList.remove('active');
   }
 }
-	
-function close_offcanvas(){
+
+function close_offcanvas() {
   darken_screen(false);
   document.querySelector('.mobile-offcanvas.show').classList.remove('show');
   document.body.classList.remove('offcanvas-active');
 }
 
-function show_offcanvas(offcanvas_id){
+function show_offcanvas(offcanvas_id) {
   darken_screen(true);
   document.getElementById(offcanvas_id).classList.add('show');
   document.body.classList.add('offcanvas-active');
 }
 
-document.addEventListener("DOMContentLoaded", function(){
-  
-  document.querySelectorAll('[data-trigger]').forEach(function(everyelement){
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[data-trigger]').forEach(function (everyelement) {
     let offcanvas_id = everyelement.getAttribute('data-trigger');
     everyelement.addEventListener('click', function (e) {
       e.preventDefault();
-          show_offcanvas(offcanvas_id);
+      show_offcanvas(offcanvas_id);
     });
   });
-  if(document.querySelectorAll('.btn-close')) {
-    document.querySelectorAll('.btn-close').forEach(function(everybutton){
-      everybutton.addEventListener('click', function (e) { 
-            close_offcanvas();
-        });
+  if (document.querySelectorAll('.btn-close')) {
+    document.querySelectorAll('.btn-close').forEach(function (everybutton) {
+      everybutton.addEventListener('click', function (e) {
+        close_offcanvas();
+      });
     });
   }
-  if(document.querySelector('.screen-darken')) {
-    document.querySelector('.screen-darken').addEventListener('click', function(event){
+  if (document.querySelector('.screen-darken')) {
+    document.querySelector('.screen-darken').addEventListener('click', function (event) {
       close_offcanvas();
     });
   }
 });
-if (document.querySelector('#navbarSideCollapse'))  {
+if (document.querySelector('#navbarSideCollapse')) {
   document.querySelector('#navbarSideCollapse').addEventListener('click', function () {
-    document.querySelector('.offcanvas-collapse').classList.toggle('open')
-  })
+    document.querySelector('.offcanvas-collapse').classList.toggle('open');
+  });
 }
 
 /*---------------------------------------------------------------------
     Fieldset
 -----------------------------------------------------------------------*/
 
-        $(document).ready(function() {
-          var e, t, a, n, o = 1,
-              r = $("fieldset").length;
-      
-          function i(e) {
-              var t = parseFloat(100 / r) * e;
-              t = t.toFixed(), $(".progress-bar").css("width", t + "%")
-          }
-          i(o), $(".next").click(function() {
-              e = $(this).parent(), t = $(this).parent().next(), $("#top-tab-list li").eq($("fieldset").index(t)).addClass("active"), $("#top-tab-list li").eq($("fieldset").index(e)).addClass("done"), t.show(), e.animate({
-                  opacity: 0
-              }, {
-                  step: function(a) {
-                      n = 1 - a, e.css({
-                          display: "none",
-                          position: "relative"
-                      }), t.css({
-                          opacity: n
-                      })
-                  },
-                  duration: 500
-              }), i(++o)
-          }), $(".previous").click(function() {
-              e = $(this).parent(), a = $(this).parent().prev(), $("#top-tab-list li").eq($("fieldset").index(e)).removeClass("active"), $("#top-tab-list li").eq($("fieldset").index(a)).removeClass("done"), a.show(), e.animate({
-                  opacity: 0
-              }, {
-                  step: function(t) {
-                      n = 1 - t, e.css({
-                          display: "none",
-                          position: "relative"
-                      }), a.css({
-                          opacity: n
-                      })
-                  },
-                  duration: 500
-              }), i(--o)
-          }), $(".submit").click(function() {
-              return !1
-          })
-      }), $(document).ready(function() {
-          var e = $("div.setup-panel div a"),
-              t = $(".setup-content"),
-              a = $(".nextBtn");
-          t.hide(), e.click(function(a) {
-              a.preventDefault();
-              var n = $($(this).attr("href")),
-                  o = $(this);
-              o.hasClass("disabled") || (e.addClass("active"), o.parent().addClass("active"), t.hide(), n.show(), n.find("input:eq(0)").focus())
-          }), a.click(function() {
-              var e = $(this).closest(".setup-content"),
-                  t = e.attr("id"),
-                  a = $('div.setup-panel div a[href="#' + t + '"]').parent().next().children("a"),
-                  n = e.find("input[type='text'],input[type='email'],input[type='password'],input[type='url'],textarea"),
-                  o = !0;
-              $(".form-group").removeClass("has-error");
-              for (var r = 0; r < n.length; r++) n[r].validity.valid || (o = !1, $(n[r]).closest(".form-group").addClass("has-error"));
-              o && a.removeAttr("disabled").trigger("click")
-          }), $("div.setup-panel div a.active").trigger("click")
-      }), $(document).ready(function() {
-          var e, t, a, n, o = 1,
-              r = $("fieldset").length;
-      
-          function i(e) {
-              var t = parseFloat(100 / r) * e;
-              t = t.toFixed(), $(".progress-bar").css("width", t + "%")
-          }
-          i(o), $(".next").click(function() {
-              e = $(this).parent(), t = $(this).parent().next(), $("#top-tabbar-vertical li").eq($("fieldset").index(t)).addClass("active"), t.show(), e.animate({
-                  opacity: 0
-              }, {
-                  step: function(a) {
-                      n = 1 - a, e.css({
-                          display: "none",
-                          position: "relative"
-                      }), t.css({
-                          opacity: n
-                      })
-                  },
-                  duration: 500
-              }), i(++o)
-          }), $(".previous").click(function() {
-              e = $(this).parent(), a = $(this).parent().prev(), $("#top-tabbar-vertical li").eq($("fieldset").index(e)).removeClass("active"), a.show(), e.animate({
-                  opacity: 0
-              }, {
-                  step: function(t) {
-                      n = 1 - t, e.css({
-                          display: "none",
-                          position: "relative"
-                      }), a.css({
-                          opacity: n
-                      })
-                  },
-                  duration: 500
-              }), i(--o)
-          }), $(".submit").click(function() {
-              return !1
-          })
-      }), $(document).ready(function() {
-          $(".file-upload").on("change", function() {
-              ! function(e) {
-                  if (e.files && e.files[0]) {
-                      var t = new FileReader;
-                      t.onload = function(e) {
-                          $(".profile-pic").attr("src", e.target.result)
-                      }, t.readAsDataURL(e.files[0])
-                  }
-              }(this)
-          }), $(".upload-button").on("click", function() {
-              $(".file-upload").click()
-          })
-      }), $(function() {
-          function e(e) {
-              return e / 100 * 360
-          }
-          $(".progress-round").each(function() {
-              var t = $(this).attr("data-value"),
-                  a = $(this).find(".progress-left .progress-bar"),
-                  n = $(this).find(".progress-right .progress-bar");
-              t > 0 && (t <= 50 ? n.css("transform", "rotate(" + e(t) + "deg)") : (n.css("transform", "rotate(180deg)"), a.css("transform", "rotate(" + e(t - 50) + "deg)")))
-          })
-      });
+// Ensure the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+  // Your code here
+
+  // Variables
+  let e,
+    t,
+    a,
+    n,
+    o = 1;
+  const r = document.querySelectorAll('fieldset').length;
+
+  // Function to update progress bar
+  function updateProgressBar(value) {
+    const progressBar = document.querySelector('.progress-bar');
+    const width = (value / r) * 100;
+    progressBar.style.width = width.toFixed() + '%';
+  }
+
+  // Function to handle "Next" button click
+  function handleNextClick() {
+    e = this.parentElement;
+    t = e.nextElementElementSibling;
+    const topTabListItems = document.querySelectorAll('#top-tab-list li');
+    const indexT = Array.from(r.children).indexOf(t);
+    topTabListItems[indexT].classList.add('active');
+
+    const indexE = Array.from(r.children).indexOf(e);
+    topTabListItems[indexE].classList.add('done');
+
+    t.style.display = 'block';
+    e.style.opacity = 0;
+
+    let a = 1;
+    const animationInterval = setInterval(function () {
+      n = 1 - a;
+      e.style.display = 'none';
+      e.style.position = 'relative';
+      t.style.opacity = n;
+      a += 0.01;
+      if (a >= 1) {
+        clearInterval(animationInterval);
+      }
+    }, 5);
+
+    o++;
+    updateProgressBar(o);
+  }
+
+  // Function to handle "Previous" button click
+  function handlePreviousClick() {
+    e = this.parentElement;
+    a = e.previousElementSibling;
+    const topTabListItems = document.querySelectorAll('#top-tab-list li');
+    const indexE = Array.from(r.children).indexOf(e);
+    topTabListItems[indexE].classList.remove('active');
+
+    const indexA = Array.from(r.children).indexOf(a);
+    topTabListItems[indexA].classList.remove('done');
+
+    a.style.display = 'block';
+    e.style.opacity = 0;
+
+    let t = 1;
+    const animationInterval = setInterval(function () {
+      n = 1 - t;
+      e.style.display = 'none';
+      e.style.position = 'relative';
+      a.style.opacity = n;
+      t += 0.01;
+      if (t >= 1) {
+        clearInterval(animationInterval);
+      }
+    }, 5);
+
+    o--;
+    updateProgressBar(o);
+  }
+
+  // Function to handle form submission
+  function handleSubmitClick() {
+    return false;
+  }
+
+  // Next button click event
+  const nextButtons = document.querySelectorAll('.next');
+  nextButtons.forEach(function (button) {
+    button.addEventListener('click', handleNextClick);
+  });
+
+  // Previous button click event
+  const previousButtons = document.querySelectorAll('.previous');
+  previousButtons.forEach(function (button) {
+    button.addEventListener('click', handlePreviousClick);
+  });
+
+  // Submit button click event
+  const submitButtons = document.querySelectorAll('.submit');
+  submitButtons.forEach(function (button) {
+    button.addEventListener('click', handleSubmitClick);
+  });
+
+  // Your code here
+});
 
 /*---------------------------------------------------------------------
 Form Validation
 -----------------------------------------------------------------------*/
 
 // Example starter JavaScript for disabling form submissions if there are invalid fields
-window.addEventListener('load', function() {
+window.addEventListener(
+  'load',
+  function () {
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     var forms = document.getElementsByClassName('needs-validation');
     // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
+    var validation = Array.prototype.filter.call(forms, function (form) {
+      form.addEventListener(
+        'submit',
+        function (event) {
           if (form.checkValidity() === false) {
-              event.preventDefault();
-              event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
           }
           form.classList.add('was-validated');
-        }, false);
-      });
-}, false);
+        },
+        false,
+      );
+    });
+  },
+  false,
+);
