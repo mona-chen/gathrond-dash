@@ -15,7 +15,7 @@ const DashboardLayout = ({ children, loading }) => {
   const game_types = getCookie('game_types');
 
   useEffect(() => {
-    if (categories.length === 0 || genres.length === 0 || game_types.length === 0) {
+    if (categories?.length === 0 || genres?.length === 0 || game_types?.length === 0) {
       dispatch(dashboardAPI.getCategory());
       dispatch(dashboardAPI.getGenre());
       dispatch(dashboardAPI.getGameType());

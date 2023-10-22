@@ -6,9 +6,6 @@ import { dashboardAPI } from '../../../../redux/dashboard';
 import Loader from '../../../../components/common/loader/Loader';
 
 const SwitchedGames = ({ user }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { dashboard_summary, users } = useSelector((state) => state.dashboard);
-
   const dispatch = useDispatch();
   const { user_switched_games, loading } = useSelector((state) => state.dashboard);
 
