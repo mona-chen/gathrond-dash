@@ -67,7 +67,7 @@ const UserSubscription = ({ user }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {subscriptions.length > 0 &&
+                    {subscriptions?.length > 0 &&
                       subscriptions?.map((chi, idx) => {
                         return (
                           <tr
