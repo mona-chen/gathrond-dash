@@ -83,7 +83,7 @@ export const toast = {
 const Toasty = () => {
   return (
     <>
-      <div style={{ zIndex: 1000 }} id="toast-container" class="position-fixed top-0 end-0 p-3"></div>
+      <div style={{ zIndex: 1000000 }} id="toast-container" class="position-fixed top-0 end-0 p-3"></div>
     </>
   );
 };

@@ -2,11 +2,11 @@
   background-color: $loader-bg;
   height: 100%;
   width: 100%;
-  position: fixed;
+  position: absolute;
   place-content: center;
   overflow: hidden !important;
   right: 0px;
-  z-index: 1250;
+  z-index: 400;
   .loader-body {
     background: url(../images/logo.svg) no-repeat scroll center center;
     background-size: 5%;

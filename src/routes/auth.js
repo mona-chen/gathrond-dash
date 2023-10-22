@@ -11,21 +11,4 @@ export const auth_routes = [
     path: '/register',
     element: Login,
   },
-
-  {
-    path: '/dashboard',
-    element: Homepage,
-  },
-  {
-    path: '/users',
-    element: Users,
-  },
-  {
-    path: '/forgot-password',
-    element: Login,
-  },
-  {
-    path: '/accept-invite',
-    element: Login,
-  },
 ];

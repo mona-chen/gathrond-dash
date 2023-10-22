@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Loader() {
+function Loader({ style, transparent }) {
   return (
-    <div id="loading">
-      <div className="loader simple-loader">
-        <div className="loader-body" />
-        <div className="loader-inner" />
+    <div style={{ ...style, backgroundColor: transparent ? 'unset' : '' }} id="loading">
+      <div style={{ backgroundColor: transparent ? 'unset' : '' }} className="loader simple-loader">
+        <div style={{ backgroundColor: transparent ? 'unset' : '' }} className="loader-body" />
+        <div style={{ backgroundColor: transparent ? 'unset' : '' }} className="loader-inner" />
       </div>{' '}
     </div>
   );

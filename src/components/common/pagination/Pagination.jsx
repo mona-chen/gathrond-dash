@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange }) {
   const totalPages = Math.ceil(totalEntries / entriesPerPage);
+
+  // Define how many page numbers to show in the pagination
+  const maxPageLinks = 5; // You can adjust this number
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -9,9 +12,13 @@ function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange })
     }
   };
 
+  // Calculate the range of page numbers to display
+  const startPage = Math.max(1, currentPage - Math.floor(maxPageLinks / 2));
+  const endPage = Math.min(totalPages, startPage + maxPageLinks - 1);
+
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
         <li key={i} className={`page-item ${i === currentPage ? 'active' : ''}`}>
           <button className="page-link" onClick={() => handlePageChange(i)}>
@@ -38,9 +45,9 @@ function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange })
                   <path
                     d="M15.5 19L8.5 12L15.5 5"
                     stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </span>
@@ -54,9 +61,9 @@ function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange })
                   <path
                     d="M8.5 5L15.5 12L8.5 19"
                     stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </span>

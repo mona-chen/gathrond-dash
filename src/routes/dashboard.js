@@ -1,20 +1,29 @@
 import Login from '../pages/auth/login/Login';
+import Games from '../pages/dashboard/games/Games';
+import Category from '../pages/dashboard/games/components/Category';
+import Genre from '../pages/dashboard/games/components/Genre';
+import Homepage from '../pages/dashboard/overview/Homepage';
+import Users from '../pages/dashboard/user/Users';
 
 export const dashboard_routes = [
   {
-    path: '/login',
-    element: Login,
+    path: '/dashboard',
+    element: Homepage,
   },
   {
-    path: '/register',
-    element: Login,
+    path: '/users',
+    element: Users,
   },
   {
-    path: '/forgot-password',
-    element: Login,
+    path: '/games',
+    element: Games,
   },
   {
-    path: '/accept-invite',
-    element: Login,
+    path: '/games/categories',
+    element: Category,
+  },
+  {
+    path: '/games/genres',
+    element: Genre,
   },
 ];

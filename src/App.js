@@ -1,15 +1,16 @@
 import logo from './logo.svg';
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import { dashboard_routes } from './routes/dashboard';
 import { auth_routes } from './routes/auth';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import PrivateRoute from './components/guard/PrivateRoute';
 import Toasty from './components/common/toast/toast';
 import store from './redux/store';
 import setAuthToken from './utils/auth.ts';
 import { getCookie } from './utils/helper/Helper';
+import { dashboardAPI } from './redux/dashboard';
 
 function App() {
   const location = useLocation();
@@ -18,7 +19,6 @@ function App() {
 
   setAuthToken(token);
 
-  //   toast.in
   return (
     <Provider store={store}>
       <div className="App">

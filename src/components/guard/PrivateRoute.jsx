@@ -43,7 +43,7 @@ const PrivateRoute = ({ children }) => {
   });
 
   const authenticated = getCookie('token');
-  console.log('token', authenticated);
+
   return authenticated ? children : <Navigate to="/login" />;
 };
 

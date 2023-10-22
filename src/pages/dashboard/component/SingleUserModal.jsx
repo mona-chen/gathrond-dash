@@ -1,5 +1,8 @@
 import React from 'react';
 import UserProfile from '../user/component/UserProfile';
+import UserSubscription from '../user/component/UserSubscription';
+import UserGames from '../user/component/UserGames';
+import SwitchedGames from '../user/component/SwitchedGames';
 
 function SingleUserModal({ chi }) {
   return (
@@ -38,7 +41,7 @@ function SingleUserModal({ chi }) {
             class="nav-link"
             id="contact-tab"
             data-bs-toggle="tab"
-            data-bs-target="#pills-contact1"
+            data-bs-target="#user-games"
             type="button"
             role="tab"
             aria-controls="contact"
@@ -52,7 +55,7 @@ function SingleUserModal({ chi }) {
             class="nav-link"
             id="contact-tab"
             data-bs-toggle="tab"
-            data-bs-target="#pills-contact1"
+            data-bs-target="#switched-games"
             type="button"
             role="tab"
             aria-controls="contact"
@@ -70,10 +73,13 @@ function SingleUserModal({ chi }) {
           </p>
         </div>
         <div class="tab-pane fade" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
-          <p>tab 2</p>
+          <UserSubscription user={chi} />
         </div>
-        <div class="tab-pane fade" id="pills-contact1" role="tabpanel" aria-labelledby="pills-contact-tab1">
-          <p>tab3</p>
+        <div class="tab-pane fade" id="user-games" role="tabpanel" aria-labelledby="pills-contact-tab1">
+          <UserGames user={chi} />
+        </div>
+        <div class="tab-pane fade" id="switched-games" role="tabpanel" aria-labelledby="pills-contact-tab1">
+          <SwitchedGames user={chi} />
         </div>
       </div>
     </div>
