@@ -29,6 +29,8 @@ function Users() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const all_users = users?.users;
+
   return (
     <>
       <DashboardLayout>
@@ -63,7 +65,7 @@ function Users() {
                         </tr>
                       </thead>
                       <tbody>
-                        {users?.map((chi, idx) => {
+                        {all_users?.map((chi, idx) => {
                           return (
                             <tr
                               onClick={() =>

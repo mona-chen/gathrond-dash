@@ -63,6 +63,7 @@ function Category() {
   ];
 
   const dispatch = useDispatch();
+  const all_categories = useSelector((state) => state.dashboard)?.categories;
 
   useEffect(() => {
     dispatch(
@@ -74,9 +75,9 @@ function Category() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, currentPage]);
 
-  const categories = new Categories();
-  const genres = new Genres();
-  const gameTypes = new GameTypes();
+  const categoryRef = useRef(new Categories(all_categories));
+
+  const categories = categoryRef.current;
   const fileManager = new FileManager();
   const { loading } = useSelector((state) => state.dashboard);
   const { dashboard_summary } = useSelector((state) => state.dashboard);
@@ -148,6 +149,8 @@ function Category() {
           category_name: '',
           image_key: '',
         });
+
+        window.location.reload();
       }
     } else {
       setUploading(false);
@@ -175,6 +178,10 @@ function Category() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    categoryRef.current = new Categories(all_categories);
+  }, [all_categories]);
 
   return (
     <DashboardLayout>

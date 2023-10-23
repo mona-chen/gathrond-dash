@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import DashboardLayout from '../../../../components/layouts/dashboard/DashboardLayout';
 import Pagination from '../../../../components/common/pagination/Pagination';
-import { capitalizeFirstLetter, formatDateTime, formatNumWithComma, symbol } from '../../../../utils/helper/Helper';
+import { capitalizeFirstLetter, formatDateTime } from '../../../../utils/helper/Helper';
 import { icons } from '../../../../assets/icons/icons';
 import GOffCanvas from '../../../../components/common/offCanvas/OffCanvas';
 import GInput from '../../../../components/common/inputs/GInputs';
@@ -64,6 +64,8 @@ function Genre() {
 
   const dispatch = useDispatch();
 
+  const all_genres = useSelector((state) => state.dashboard)?.genres;
+
   useEffect(() => {
     dispatch(
       dashboardAPI.getAllGames({
@@ -74,9 +76,8 @@ function Genre() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, currentPage]);
 
-  const categories = new Categories();
-  const genres = new Genres();
-  const gameTypes = new GameTypes();
+  const genresRef = useRef(new Genres(all_genres));
+  const genres = genresRef.current;
   const fileManager = new FileManager();
   const { loading } = useSelector((state) => state.dashboard);
   const { dashboard_summary } = useSelector((state) => state.dashboard);
@@ -95,10 +96,11 @@ function Genre() {
     });
   }
   async function handleEditSubmit() {
+    genres.reset();
+
     if (editImage) {
       setUploading(true);
       const resp = await fileManager.upload(dispatch, editImage);
-
       if (resp) {
         setUploading(false);
         // setEditData({
@@ -106,22 +108,44 @@ function Genre() {
         //   image_key: resp.key,
         // });
 
-        await dispatch(
+        const resp = await dispatch(
           dashboardAPI.updateItem({
             type: 'genre',
-            data: { ...editData, image_key: resp.key },
+            data: editData,
           }),
         );
+
+        if (resp.payload?.status === 'success') {
+          dispatch(dashboardAPI.getGenre());
+          dispatch(dashboardAPI.getCategory());
+          setEditData({
+            genre_name: '',
+            image_key: '',
+          });
+
+          setEditImage('');
+        }
       } else {
         setUploading(false);
       }
     } else {
-      await dispatch(
+      const resp = await dispatch(
         dashboardAPI.updateItem({
           type: 'genre',
           data: editData,
         }),
       );
+
+      if (resp.payload?.status === 'success') {
+        dispatch(dashboardAPI.getGenre());
+        dispatch(dashboardAPI.getCategory());
+        setEditData({
+          genre_name: '',
+          image_key: '',
+        });
+
+        setEditImage('');
+      }
     }
   }
 
@@ -129,6 +153,7 @@ function Genre() {
     setUploading(true);
     const resp = await fileManager.upload(dispatch, addImage);
 
+    genres.reset();
     if (resp) {
       setUploading(false);
 
@@ -139,18 +164,18 @@ function Genre() {
         }),
       );
 
-      if (resp2.payload.status === 'success') {
+      if (resp2.payload?.status === 'success') {
         setAddData({
-          game_type_id: '',
-          category_id: '',
-          count: '',
-          recommended: '',
-          description: '',
-          amount: '',
-          name: '',
-          genre_id: '',
+          genre_name: '',
           image_key: '',
         });
+
+        setAddImage('');
+
+        if (resp.payload?.status === 'success') {
+          dispatch(dashboardAPI.getGenre());
+          dispatch(dashboardAPI.getCategory());
+        }
       }
     } else {
       setUploading(false);
@@ -174,8 +199,16 @@ function Genre() {
 
   useEffect(() => {
     dispatch(dashboardAPI.getDashboardData());
+    dispatch(dashboardAPI.getGenre());
+    genres.listen();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  //initialize classes
+
+  useEffect(() => {
+    genresRef.current = new Genres(all_genres);
+  }, [all_genres]);
 
   return (
     <DashboardLayout>
@@ -196,14 +229,14 @@ function Genre() {
                   </button>
                 </div>
                 <div class="d-flex mt-3 ms-4 me-4 justify-content-between">
-                  <GInput
+                  {/* <GInput
                     onChange={setFilter}
                     value={filter}
                     chevron
                     style={buttonStyle}
                     type="select"
                     selectOptions={gameFilters}
-                  />
+                  /> */}
                   <div class="form-outline">
                     <input
                       type="search"
@@ -225,18 +258,14 @@ function Genre() {
                         <thead class="">
                           <tr>
                             <th>Name</th>
-                            <th>Amount</th>
-                            <th>Category</th>
-                            <th>Stock</th>
-                            <th>Recommended</th>
                             <th>Created At</th>
                             <th></th>
                           </tr>
                         </thead>
                         <tbody>
-                          {all_games?.map((chi, idx) => {
+                          {genres.max?.map((chi, idx) => {
                             return (
-                              <tr>
+                              <tr key={idx}>
                                 <td>
                                   <div className="d-flex gap-3 justify-content-start align-items-center">
                                     <figure style={{ width: '80px', height: '80px' }} className="rounded-pill">
@@ -249,17 +278,11 @@ function Genre() {
                                     <p>{chi.name}</p>
                                   </div>
                                 </td>{' '}
-                                <td>{symbol('ngn') + formatNumWithComma(chi?.amount, 'ngn')}</td>
-                                <td>{categories.filter(chi?.category_id)?.label}</td>
-                                <td>{chi.count}</td>
-                                <td>{chi.recommended === 0 ? 'No' : 'Yes'}</td>
                                 <td>{formatDateTime(chi.created_at)}</td>
                                 <td>
                                   <div className="d-flex gap-4">
                                     <figure
-                                      onClick={() =>
-                                        setEditData({ ...chi, game_id: chi.id, game_type_id: chi.game_type })
-                                      }
+                                      onClick={() => setEditData({ ...chi, genre_id: chi.id, genre_name: chi.name })}
                                       data-bs-toggle="tooltip"
                                       data-bs-placement="top"
                                       title="Edit Genre"
@@ -307,16 +330,17 @@ function Genre() {
                           })}
                         </tbody>
                       </table>
-                      <Pagination
-                        totalEntries={dashboard_summary.total_games}
-                        currentPage={currentPage}
-                        entriesPerPage={dashboard_summary.cursor_length}
-                        onPageChange={(e) => {
-                          setCurrentPage(e);
-                        }}
-                      />
                     </div>
                   )}
+                  {/* <Pagination
+                    style={{ paddingTop: '500px' }}
+                    totalEntries={dashboard_summary.total_games}
+                    currentPage={currentPage}
+                    entriesPerPage={dashboard_summary.cursor_length}
+                    onPageChange={(e) => {
+                      setCurrentPage(e);
+                    }}
+                  /> */}
                 </div>
               </div>
             </div>
@@ -340,112 +364,7 @@ function Genre() {
                     />
                   </div>
                   <div class="mb-3">
-                    <GInput onChange={handleChange} value={editData?.name} id="name" hint={'Genre Name'} />
-                  </div>
-
-                  <div class="mb-3">
-                    <GInput
-                      onChange={handleChange}
-                      id="amount"
-                      value={editData.amount}
-                      hint={'Amount'}
-                      type={'number'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      style={{ minHeight: '7rem' }}
-                      value={editData.description}
-                      id="description"
-                      onChange={handleChange}
-                      hint={'Description'}
-                      type={'textarea'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      id="recommended"
-                      onChange={(e) => {
-                        handleChange({
-                          target: {
-                            id: 'recommended',
-                            value: e.value,
-                          },
-                        });
-                      }}
-                      value={[
-                        {
-                          value: editData.recommended,
-                          label: editData.recommended === 0 ? 'No' : 'Yes',
-                        },
-                      ]}
-                      hint={'Recommended'}
-                      selectOptions={[
-                        { label: 'Yes', value: 0 },
-                        { label: 'No', value: 1 },
-                      ]}
-                      type={'select'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      onChange={handleChange}
-                      value={editData?.count}
-                      id="count"
-                      hint={'Stock Count'}
-                      type={'number'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      id="category_id"
-                      value={categories.filter(editData.category_id)}
-                      hint={'Category'}
-                      onChange={(e) => {
-                        handleChange({
-                          target: {
-                            id: 'category_id',
-                            value: e.value,
-                          },
-                        });
-                      }}
-                      selectOptions={categories.mid}
-                      type={'select'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      id="game_type_id"
-                      hint={'Genre Type'}
-                      onChange={(e) => {
-                        handleChange({
-                          target: {
-                            id: 'game_type_id',
-                            value: e.value,
-                          },
-                        });
-                      }}
-                      value={gameTypes.filter(editData.game_type_id)}
-                      selectOptions={gameTypes.mid}
-                      type={'select'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      id="genre_id"
-                      onChange={(e) => {
-                        handleChange({
-                          target: {
-                            id: 'genre_id',
-                            value: e.value,
-                          },
-                        });
-                      }}
-                      value={genres.filter(editData.genre_id)}
-                      hint={'Genre'}
-                      selectOptions={genres.mid}
-                      type={'select'}
-                    />
+                    <GInput onChange={handleChange} value={editData?.genre_name} id="genre_name" hint={'Genre Name'} />
                   </div>
                 </form>
                 <GButton
@@ -478,122 +397,21 @@ function Genre() {
                     />
                   </div>
                   <div class="mb-3">
-                    <GInput onChange={handleAddChange} value={addData?.name} id="name" hint={'Genre Name'} />
-                  </div>
-
-                  <div class="mb-3">
                     <GInput
                       onChange={handleAddChange}
-                      id="amount"
-                      value={addData.amount}
-                      hint={'Amount'}
-                      type={'number'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      style={{ minHeight: '7rem' }}
-                      value={addData.description}
-                      id="description"
-                      onChange={handleAddChange}
-                      hint={'Description'}
-                      type={'textarea'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      id="recommended"
-                      onChange={(e) => {
-                        handleAddChange({
-                          target: {
-                            id: 'recommended',
-                            value: e.value,
-                          },
-                        });
-                      }}
-                      value={[
-                        {
-                          value: addData.recommended,
-                          label: addData.recommended === 0 ? 'No' : 'Yes',
-                        },
-                      ]}
-                      hint={'Recommended'}
-                      selectOptions={[
-                        { label: 'Yes', value: 0 },
-                        { label: 'No', value: 1 },
-                      ]}
-                      type={'select'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      onChange={handleAddChange}
-                      value={addData?.count}
-                      id="count"
-                      hint={'Stock Count'}
-                      type={'number'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      id="category_id"
-                      value={categories.filter(addData.category_id)}
-                      hint={'Category'}
-                      onChange={(e) => {
-                        handleAddChange({
-                          target: {
-                            id: 'category_id',
-                            value: e.value,
-                          },
-                        });
-                      }}
-                      selectOptions={categories.mid}
-                      type={'select'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      id="game_type_id"
-                      hint={'Genre Type'}
-                      onChange={(e) => {
-                        handleAddChange({
-                          target: {
-                            id: 'game_type_id',
-                            value: e.value,
-                          },
-                        });
-                      }}
-                      value={gameTypes.filter(addData.game_type_id)}
-                      selectOptions={gameTypes.mid}
-                      type={'select'}
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <GInput
-                      id="genre_id"
-                      onChange={(e) => {
-                        handleAddChange({
-                          target: {
-                            id: 'genre_id',
-                            value: e.value,
-                          },
-                        });
-                      }}
-                      value={genres.filter(addData.genre_id)}
-                      hint={'Genre'}
-                      selectOptions={genres.mid}
-                      type={'select'}
+                      value={addData?.genre_name}
+                      id="genre_name"
+                      hint={'Genre Name'}
                     />
                   </div>
                 </form>
                 <GButton
-                  loadingText={uploading ? 'Uploading image...' : 'Creating...'}
+                  loadingText={uploading ? 'Uploading image...' : 'Saving data...'}
                   loading={loading}
-                  disabled={disabledAlgoAdd()}
                   onClick={handleAddSubmit}
-                  className={`btn mt-5 w-100 btn-${disabledAlgoAdd() ? 'secondary' : 'primary'} `}
+                  className="btn mt-5 w-100 btn-secondary"
                 >
-                  Create Genre
+                  Add
                 </GButton>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange }) {
+function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange, style }) {
   const totalPages = Math.ceil(totalEntries / entriesPerPage);
 
   // Define how many page numbers to show in the pagination
@@ -31,7 +31,7 @@ function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange })
   };
 
   return (
-    <div className="d-flex justify-content-between flex-wrap">
+    <div className="d-flex justify-content-between flex-wrap pt-3">
       <div className="dataTables_info" id="example_info" role="status" aria-live="polite">
         Showing {(currentPage - 1) * entriesPerPage + 1} to {Math.min(currentPage * entriesPerPage, totalEntries)} of{' '}
         {totalEntries} entries

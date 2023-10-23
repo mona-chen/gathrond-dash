@@ -63,6 +63,9 @@ function Games() {
   ];
 
   const dispatch = useDispatch();
+  const all_categories = useSelector((state) => state.dashboard)?.categories;
+  const all_genres = useSelector((state) => state.dashboard)?.genres;
+  const all_game_types = useSelector((state) => state.dashboard)?.categories;
 
   useEffect(() => {
     dispatch(
@@ -74,9 +77,14 @@ function Games() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, currentPage]);
 
-  const categories = new Categories();
-  const genres = new Genres();
+  const categoryRef = useRef(new Categories(all_categories));
+
+  const categories = categoryRef.current;
+  const genresRef = useRef(new Genres(all_genres));
+
+  const genres = genresRef.current;
   const gameTypes = new GameTypes();
+
   const fileManager = new FileManager();
   const { loading } = useSelector((state) => state.dashboard);
   const { dashboard_summary } = useSelector((state) => state.dashboard);
@@ -174,8 +182,17 @@ function Games() {
 
   useEffect(() => {
     dispatch(dashboardAPI.getDashboardData());
+    dispatch(dashboardAPI.getCategory());
+    dispatch(dashboardAPI.getGenre());
+    dispatch(dashboardAPI.getGameType());
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    categoryRef.current = new Categories(all_categories);
+    genresRef.current = new Genres(all_genres);
+  }, [all_categories, all_genres]);
 
   return (
     <DashboardLayout>
