@@ -31,4 +31,10 @@ export const sideMenuList = [
       },
     ],
   },
+  {
+    name: 'Messages',
+    icon: icons.users,
+    link: '/support-chats',
+    numb: 'two',
+  },
 ];

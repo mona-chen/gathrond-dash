@@ -3,6 +3,7 @@ import Games from '../pages/dashboard/games/Games';
 import Category from '../pages/dashboard/games/components/Category';
 import Genre from '../pages/dashboard/games/components/Genre';
 import Homepage from '../pages/dashboard/overview/Homepage';
+import ChatSection from '../pages/dashboard/support/Chat';
 import Users from '../pages/dashboard/user/Users';
 
 export const dashboard_routes = [
@@ -25,5 +26,9 @@ export const dashboard_routes = [
   {
     path: '/games/genres',
     element: Genre,
+  },
+  {
+    path: '/support-chats',
+    element: ChatSection,
   },
 ];
