@@ -62,7 +62,7 @@ export class Categories extends Component {
       return [];
     }
 
-    const label = this.mid.find((c) => c.value === id);
+    const label = this?.mid?.find((c) => c.value === id);
     return label ?? []; // This will be the matching object or undefined
   };
 
@@ -98,7 +98,7 @@ export class Genres extends Component {
     }
 
     // Access Redux state
-    const label = this.mid.find((c) => c.value === id);
+    const label = this?.mid?.find((c) => c.value === id);
     return label ?? []; // This will be the matching object or undefined
   };
 
@@ -129,7 +129,7 @@ export class GameTypes extends Component {
       return [];
     }
 
-    const label = this.mid.find((c) => c.value === id);
+    const label = this?.mid?.find((c) => c.value === id);
     return label ?? []; // This will be the matching object or undefined
   };
 

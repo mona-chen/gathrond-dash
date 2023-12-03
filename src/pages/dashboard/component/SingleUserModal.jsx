@@ -22,20 +22,7 @@ function SingleUserModal({ chi }) {
             Profile
           </button>
         </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="profile-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#pills-profile1"
-            type="button"
-            role="tab"
-            aria-controls="profile"
-            aria-selected="false"
-          >
-            Subscriptions
-          </button>
-        </li>
+
         <li class="nav-item" role="presentation">
           <button
             class="nav-link"
@@ -55,13 +42,13 @@ function SingleUserModal({ chi }) {
             class="nav-link"
             id="contact-tab"
             data-bs-toggle="tab"
-            data-bs-target="#switched-games"
+            data-bs-target="#user-trades"
             type="button"
             role="tab"
             aria-controls="contact"
             aria-selected="false"
           >
-            Switched Games
+            Trades
           </button>
         </li>
       </ul>
@@ -72,7 +59,7 @@ function SingleUserModal({ chi }) {
             <UserProfile chi={chi} />
           </p>
         </div>
-        <div class="tab-pane fade" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
+        <div class="tab-pane fade" id="user-trades" role="tabpanel" aria-labelledby="pills-profile-tab1">
           <UserSubscription user={chi} />
         </div>
         <div class="tab-pane fade" id="user-games" role="tabpanel" aria-labelledby="pills-contact-tab1">

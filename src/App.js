@@ -11,6 +11,7 @@ import store from './redux/store';
 import setAuthToken from './utils/auth.ts';
 import { getCookie } from './utils/helper/Helper';
 import { dashboardAPI } from './redux/dashboard';
+import './index.css';
 
 function App() {
   const location = useLocation();

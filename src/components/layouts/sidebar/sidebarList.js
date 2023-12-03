@@ -20,6 +20,12 @@ export const sideMenuList = [
       },
 
       {
+        name: 'All User Games',
+        link: '/user-games',
+        // icon: walletBalanceIcon,
+      },
+
+      {
         name: 'Game Categories',
         link: '/games/categories',
         // icon: walletFundingeIcon,

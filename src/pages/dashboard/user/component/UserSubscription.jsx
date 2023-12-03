@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Pagination from '../../../../components/common/pagination/Pagination';
-import { formatDateTime, formatNumWithComma } from '../../../../utils/helper/Helper';
+import { formatDateTime, formatNumWithComma, symbol } from '../../../../utils/helper/Helper';
 import { useDispatch, useSelector } from 'react-redux';
 import { dashboardAPI } from '../../../../redux/dashboard';
 import Loader from '../../../../components/common/loader/Loader';
@@ -13,7 +13,7 @@ const UserSubscription = ({ user }) => {
   const { subscriptions, loading } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    dispatch(dashboardAPI.getSubscriptions({ id: 1 }));
+    dispatch(dashboardAPI.getUserPurchase({ id: 1 }));
   }, []);
 
   function formatStatus(stat) {
@@ -32,14 +32,13 @@ const UserSubscription = ({ user }) => {
     }
   }
 
-  console.log(subscriptions);
   return (
     <div className="row">
       <div className="col-sm-12">
         <div className="card">
           <div className="d-flex mt-3 ms-4 me-4 justify-content-between">
             <div className="card-header p-0 m-0">
-              <h4 className="card-title text-white">Subscriptions</h4>
+              <h4 className="card-title text-white">User Trades</h4>
             </div>
             <div className="form-outline">
               <input
@@ -61,7 +60,7 @@ const UserSubscription = ({ user }) => {
                     <tr>
                       <th>Invoice ID</th>
                       <th>Amount</th>
-                      <th>Meta Data</th>
+                      <th>Type</th>
                       <th>Status</th>
                       <th>Created At</th>
                     </tr>
@@ -80,8 +79,12 @@ const UserSubscription = ({ user }) => {
                             key={idx}
                           >
                             <td>{chi?.invoice_id}</td>
-                            <td>{formatNumWithComma(chi?.amount, 'ngn')}</td>
-                            <td>{chi?.phone}</td>
+                            <td>{chi?.trade_name}</td>
+                            <td>
+                              {chi.amount !== '0.00'
+                                ? symbol('ngn') + '' + formatNumWithComma(chi?.amount, 'ngn')
+                                : '-'}
+                            </td>
                             <td>{formatStatus(chi?.tranx_status)}</td>
                             <td>{formatDateTime(chi?.created_at)}</td>
                           </tr>

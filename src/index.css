@@ -19,3 +19,7 @@ body,
   margin-left: 2.9rem;
   margin-top: -0.75rem;
 }
+
+.chat-scroll {
+  height: 77vh;
+}

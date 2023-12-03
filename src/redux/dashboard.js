@@ -31,7 +31,7 @@ export const getGamesStock = createAsyncThunk('/apps/games/get_games_in_stock', 
   }
 });
 
-const getSubscriptions = createAsyncThunk('/admin/user/get_user_subscription?user_id', async (payload, thunkAPI) => {
+const getUserPurchase = createAsyncThunk('/admin/user/get_user_subscription?user_id', async (payload, thunkAPI) => {
   try {
     const { data } = await axios.get(`admin/user/get_user_purchase?user_id=${payload?.id ?? 0}`, payload);
     // console.log("stocker stor", data);
@@ -215,6 +215,90 @@ const getAllGames = createAsyncThunk('get_all_user?cursor=0', async (payload, th
   }
 });
 
+const getAllUserGames = createAsyncThunk('get_all_user_games?cursor=0', async (payload, thunkAPI) => {
+  try {
+    const { data } = await axios.get(
+      `admin/user/${payload.url || 'get_all_user_games'}?cursor=${payload?.cursor ?? 0}`,
+      payload,
+    );
+
+    if (data.status !== 'success') {
+      toast.error(data.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setAllUserGames(data.data.games));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const getAllMessages = createAsyncThunk('admin/chat/get_all_message', async (payload, thunkAPI) => {
+  try {
+    const { data } = await axios.get(
+      `admin/chat/${payload?.url || '/get_all_message'}?cursor=${payload?.cursor ?? 0}`,
+      payload,
+    );
+
+    if (data.status !== 'success') {
+      toast.error(data.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setMessages(data.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const getAMessage = createAsyncThunk('admin/chat/get_all_message', async (payload, thunkAPI) => {
+  try {
+    const { data } = await axios.get(
+      `admin/chat/${payload?.url || '/get_user_message'}?user_id=${payload?.user_id}&cursor=${payload?.cursor ?? 0}`,
+      payload,
+    );
+
+    if (data.status !== 'success') {
+      toast.error(data.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setUserMessage(data.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
 const getCategory = createAsyncThunk('get_category', async (payload, thunkAPI) => {
   try {
     const { data } = await axios.get(`admin/game/get_category`, payload);
@@ -361,6 +445,30 @@ const addItem = createAsyncThunk('add_item', async (payload, thunkAPI) => {
   }
 });
 
+const replyMessages = createAsyncThunk('reply-messages', async (payload, thunkAPI) => {
+  try {
+    const { data } = await axios.post(`/admin/chat/admin_reply`, payload);
+
+    if (data.status !== 'success') {
+      toast.error(data.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data.status === 'success') {
+      toast.success(data.message);
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
 const deleteItem = createAsyncThunk('delete_item', async (payload, thunkAPI) => {
   try {
     const { data } = await axios.delete(`admin/game/delete_${payload.type}`, payload.data);
@@ -399,6 +507,9 @@ export const dashboard = createSlice({
     user_games: [],
     user_switched_games: [],
     inStock: [],
+    all_user_games: [],
+    all_messages: [],
+    messages: [],
     game_types: [],
   },
   reducers: {
@@ -436,6 +547,16 @@ export const dashboard = createSlice({
     setGameType: (state, action) => {
       state.game_types = action.payload;
     },
+    setAllUserGames: (state, action) => {
+      state.all_user_games = action.payload;
+    },
+    setMessages: (state, action) => {
+      state.all_messages = action.payload;
+    },
+
+    setUserMessage: (state, action) => {
+      state.messages = action.payload;
+    },
   },
   extraReducers: {
     [getGamesStock.pending]: (state) => {
@@ -471,13 +592,13 @@ export const dashboard = createSlice({
       state = state.initialState;
     },
 
-    [getSubscriptions.pending]: (state) => {
+    [getUserPurchase.pending]: (state) => {
       state.loading = true;
     },
-    [getSubscriptions.fulfilled]: (state) => {
+    [getUserPurchase.fulfilled]: (state) => {
       state.loading = false;
     },
-    [getSubscriptions.rejected]: (state) => {
+    [getUserPurchase.rejected]: (state) => {
       state = state.initialState;
     },
 
@@ -566,24 +687,31 @@ export const {
   setCategories,
   setGameType,
   setRecommendedGames,
+  setUserMessage,
+  setAllUserGames,
+  setMessages,
 } = dashboard.actions;
 
 export const dashboardAPI = {
   getGamesStock,
   getDashboardData,
   getRecommendedGames,
-  getSubscriptions,
+  getUserPurchase,
   getUsers,
   getSwitchedGames,
   getUserGames,
   getCategory,
+  getAMessage,
   getGenre,
   getAllGames,
+  getAllUserGames,
   upload,
   updateItem,
   deleteItem,
   addItem,
   getGameType,
+  getAllMessages,
+  replyMessages,
 };
 
 export default dashboard.reducer;
