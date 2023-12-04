@@ -456,7 +456,7 @@ const replyMessages = createAsyncThunk('reply-messages', async (payload, thunkAP
       return data;
     }
     if (data.status === 'success') {
-      toast.success(data.message);
+      // toast.success(data.message);
       return data;
     }
   } catch (err) {
@@ -469,6 +469,25 @@ const replyMessages = createAsyncThunk('reply-messages', async (payload, thunkAP
   }
 });
 
+const readMessage = createAsyncThunk('reply-messages', async (payload, thunkAPI) => {
+  try {
+    const { data } = await axios.post(`/admin/chat/read_status`, { user_id: payload });
+
+    if (data.status !== 'success') {
+      return data;
+    }
+    if (data.status === 'success') {
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
 const deleteItem = createAsyncThunk('delete_item', async (payload, thunkAPI) => {
   try {
     const { data } = await axios.delete(`admin/game/delete_${payload.type}`, payload.data);
@@ -712,6 +731,7 @@ export const dashboardAPI = {
   getGameType,
   getAllMessages,
   replyMessages,
+  readMessage,
 };
 
 export default dashboard.reducer;

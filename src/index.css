@@ -20,6 +20,30 @@ body,
   margin-top: -0.75rem;
 }
 
+.chat-scroll-container {
+  height: 80vh;
+  min-height: 60vh;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .chat-scroll {
-  height: 77vh;
+  padding-bottom: 8rem;
+  height: 90%;
+  width: 100%;
+  position: relative;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.main-content {
+  overflow: hidden !important;
+  height: 100vh;
 }

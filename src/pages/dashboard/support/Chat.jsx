@@ -1,26 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../../../components/layouts/dashboard/DashboardLayout';
 import { useDispatch, useSelector } from 'react-redux';
-import { dashboardAPI } from '../../../redux/dashboard';
-import { formatDateTime } from '../../../utils/helper/Helper';
+import { dashboardAPI, setUserMessage } from '../../../redux/dashboard';
+import { formatDateTime, formatRelativeDate } from '../../../utils/helper/Helper';
+import Empty from '../../../components/common/empty/index';
+import { icons } from '../../../assets/icons/icons';
 
 function ChatSection() {
   const dispatch = useDispatch();
   const { all_messages, messages } = useSelector((state) => state.dashboard);
   const [replyMessage, setReplyMessage] = useState('');
+  let { chat } = messages;
 
   const handleReply = () => {
     if (replyMessage.trim() !== '') {
       // Dispatch an action to send the reply
-      dispatch(dashboardAPI.replyMessages({ user_id: userId?.c_id, message: replyMessage, message_type: 0 }));
+      dispatch(dashboardAPI.replyMessages({ user_id: userId?.c_id, message: replyMessage.trim(), message_type: 0 }));
+      fetchMsg();
+      dispatch(
+        setUserMessage({
+          ...messages,
+          chat: [
+            ...messages.chat,
+            {
+              id: 117,
+              admin_id: 1,
+              c_id: 12,
+              message: replyMessage?.trim(),
+              message_type: 0,
+              read_status: 0,
+              deleted: 0,
+              created_at: '2023-11-28 15:47:15',
+              updated_at: '2023-11-28 15:47:15',
+            },
+          ],
+        }),
+      );
+
       setReplyMessage('');
     }
   };
+
   const [userId, setUserId] = useState(null);
   useEffect(() => {
     const fetchData = () => {
       dispatch(dashboardAPI.getAllMessages());
 
+      if (userId?.c_id) {
+        dispatch(
+          dashboardAPI.getAMessage({
+            user_id: userId?.c_id,
+            message: replyMessage,
+            message_type: 0,
+          }),
+        );
+      }
       if (all_messages.length > 0) {
         setUserId(all_messages[0]);
       }
@@ -36,9 +70,20 @@ function ChatSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function fetchMsg() {
+    dispatch(
+      dashboardAPI.getAMessage({
+        user_id: userId?.c_id,
+        message: replyMessage,
+        message_type: 0,
+      }),
+    );
+  }
+
   useEffect(() => {
     if (userId !== null) {
       dispatch(dashboardAPI.getAllMessages());
+      dispatch(dashboardAPI.readMessage(userId?.c_id));
       dispatch(
         dashboardAPI.getAMessage({
           user_id: userId?.c_id,
@@ -50,10 +95,6 @@ function ChatSection() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
-
-  const { chat } = messages;
-
-  useEffect(() => {}, []);
 
   return (
     <DashboardLayout>
@@ -79,19 +120,22 @@ function ChatSection() {
                           <a href="#!" className="d-flex justify-content-between link-light">
                             <div className="d-flex flex-row">
                               <img
-                                src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${chi?.firstname}`}
+                                src={`https://api.dicebear.com/7.x/initials/svg?seed=${chi?.firstname}`}
                                 alt="avatar"
-                                className="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
+                                className="rounded-circle avatar d-flex align-self-center me-3 shadow-1-strong"
                                 width={60}
                               />
                               <div className="pt-1">
                                 <p className="fw-bold mb-0">{chi?.firstname + ' ' + chi?.lastname}</p>
-                                <p className="small text-white">{chi?.message}?</p>
+                                <p className="small text-white">{chi?.message}</p>
                               </div>
                             </div>
                             <div className="pt-1">
                               <p className="small text-white mb-1">{formatDateTime(chi?.updated_at).split(',')[2]}</p>
-                              <span className="badge bg-danger float-end">1</span>
+
+                              {chi.read_status !== 1 && chi?.admin_id == null && (
+                                <span className="badge bg-danger float-end">1</span>
+                              )}
                             </div>
                           </a>
                         </li>
@@ -101,78 +145,92 @@ function ChatSection() {
                 </div>
               </div>
             </div>
-            <div className="col-md-6 col-lg-7 col-xl-7 overflow-scroll chat-scroll">
-              <ul className="list-unstyled text-white">
-                {chat?.map((chi, idx) => {
-                  return (
-                    <React.Fragment key={idx}>
-                      {chi?.admin_id == null ? (
-                        <li className="d-flex gap-4 justify-content-end mb-4">
-                          <img
-                            src={`https://api.dicebear.com/7.x/adventurer/svg?seed=admin`}
-                            alt="avatar"
-                            className="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
-                            width={60}
-                          />
-                          <div className="card mask-custom">
-                            <div
-                              className="card-header w-100 d-flex justify-content-between p-3"
-                              style={{ borderBottom: '1px solid rgba(255,255,255,.3)' }}
-                            >
-                              <p className="fw-bold mb-0">Admin</p>
-                              <p className="text-light small mb-0">
-                                <i className="far fa-clock" /> 12 mins ago
-                              </p>
-                            </div>
-                            <div className="card-body">
-                              <p className="mb-0">{chi?.message}</p>
-                            </div>
-                          </div>
-                        </li>
-                      ) : (
-                        <li className="d-flex justify-content-start mb-4">
-                          <div style={{ minWidth: '240px' }} className="card mask-custom ">
-                            <div
-                              className="card-header w-100 d-flex justify-content-between p-3"
-                              style={{ borderBottom: '1px solid rgba(255,255,255,.3)' }}
-                            >
-                              <p className="fw-bold mb-0">{userId?.firstname}</p>
-                              <p className="text-light small mb-0">
-                                <i className="far fa-clock" /> 13 mins ago
-                              </p>
-                            </div>
-                            <div className="card-body">
-                              <p className="mb-0">S{chi?.message}</p>
-                            </div>
-                          </div>
-                          <img
-                            src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${userId?.firstname}`}
-                            alt="avatar"
-                            className="rounded-circle d-flex align-self-start ms-3 shadow-1-strong"
-                            width={60}
-                          />
-                        </li>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
 
-                <div className="mb-3">
+            <div className="chat-scroll-container col-md-6 col-lg-7 col-xl-7">
+              <div className="overflow-scroll chat-scroll">
+                <ul className="list-unstyled text-white">
+                  {!chat || chat?.length === 0 ? (
+                    <Empty title={'No Messages Found'} subTitle={'Kindly click on a chat to see the messages'} />
+                  ) : (
+                    chat?.map((chi, idx) => {
+                      return (
+                        <React.Fragment key={idx}>
+                          {chi?.admin_id != null ? (
+                            <li className="d-flex gap-4 justify-content-end mb-4">
+                              <img
+                                src={`https://api.dicebear.com/7.x/initials/svg?seed=admin`}
+                                alt="avatar"
+                                className="rounded-circle d-flex avatar align-self-start me-3 shadow-1-strong"
+                                width={60}
+                              />
+                              <div className="card mask-custom">
+                                <div
+                                  st
+                                  className="card-header w-100 d-flex justify-content-between p-3"
+                                  style={{ borderBottom: '1px solid rgba(255,255,255,.3)', minWidth: '250px' }}
+                                >
+                                  <p className="fw-bold mb-0">Admin</p>
+                                  <p className="text-light small mb-0">
+                                    <i className="far fa-clock" /> {formatRelativeDate(chi?.created_at)}
+                                  </p>
+                                </div>
+                                <div className="card-body">
+                                  <p className="mb-0">{chi?.message}</p>
+                                </div>
+                              </div>
+                            </li>
+                          ) : (
+                            <li className="d-flex justify-content-start mb-4">
+                              <div style={{ minWidth: '240px' }} className="card mask-custom ">
+                                <div
+                                  className="card-header w-100 d-flex justify-content-between p-3"
+                                  style={{ borderBottom: '1px solid rgba(255,255,255,.3)' }}
+                                >
+                                  <p className="fw-bold mb-0">{userId?.firstname}</p>
+                                  <p className="text-light small mb-0">
+                                    <i className="far fa-clock" /> {formatRelativeDate(chi?.created_at)}
+                                  </p>
+                                </div>
+                                <div className="card-body">
+                                  <p className="mb-0">{chi?.message}</p>
+                                </div>
+                              </div>
+                              <img
+                                src={`https://api.dicebear.com/7.x/initials/svg?seed=${userId?.firstname}`}
+                                alt="avatar"
+                                className="rounded-circle d-flex avatar align-self-start ms-3 shadow-1-strong"
+                                width={60}
+                              />
+                            </li>
+                          )}
+                        </React.Fragment>
+                      );
+                    })
+                  )}
+                </ul>
+              </div>
+
+              {chat && chat?.length > 0 && (
+                <div className="reply-button">
                   <textarea
+                    style={{
+                      height: replyMessage.length > 50 ? `${replyMessage?.length}px` : '50px',
+                    }}
                     className="form-control bg-dark text-white"
                     placeholder="Type your reply..."
                     value={replyMessage}
+                    rows={1}
+                    cols={1}
                     onChange={(e) => setReplyMessage(e.target.value)}
                   ></textarea>
-                </div>
 
-                <button type="button" className="btn btn-light btn-lg btn-rounded float-end" onClick={handleReply}>
-                  Send
-                  <span role="img" aria-label="send">
-                    🚀
-                  </span>
-                </button>
-              </ul>
+                  <div type="button" className="send-btn" onClick={handleReply}>
+                    <span role="img" aria-label="send">
+                      {icons.send_icon}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

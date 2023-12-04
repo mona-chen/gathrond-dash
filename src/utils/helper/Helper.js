@@ -522,3 +522,27 @@ export function getCookie(name) {
   // If the cookie is not found, return null
   return null;
 }
+
+export function formatRelativeDate(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const timeDiff = now - date;
+  const secondsDiff = Math.round(timeDiff / 1000);
+  const minutesDiff = Math.round(secondsDiff / 60);
+  const hoursDiff = Math.round(minutesDiff / 60);
+  const daysDiff = Math.round(hoursDiff / 24);
+
+  if (secondsDiff < 60) {
+    return 'few seconds ago';
+  } else if (minutesDiff < 60) {
+    return `${minutesDiff} ${minutesDiff === 1 ? 'minute' : 'minutes'} ago`;
+  } else if (hoursDiff < 24) {
+    return `${hoursDiff} ${hoursDiff === 1 ? 'hour' : 'hours'} ago`;
+  } else if (daysDiff === 1) {
+    return 'yesterday';
+  } else if (now.getFullYear() === date.getFullYear()) {
+    return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  } else {
+    return date.toLocaleDateString([], { hour: 'numeric', minute: '2-digit', month: 'short', day: 'numeric' });
+  }
+}

@@ -1,0 +1,67 @@
+.empty-screen {
+  justify-content: center;
+  align-items: center;
+  figure {
+    width: 20rem;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  span {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8rem;
+  }
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.reply-button {
+  position: absolute;
+  border-top: 10px solid rgba(255, 255, 255, 0.1);
+  bottom: 0;
+  width: 90%;
+  box-shadow: 0 1rem 2rem 0 rgba(0, 0, 0, 0.081);
+  display: flex;
+  background-color: #101010;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  textarea {
+    border: none;
+    height: 40px;
+    resize: none;
+    width: 90%;
+    font-weight: 400 !important;
+    font-size: 12px;
+    color: rgb(191, 191, 191) !important;
+    max-height: 100px;
+    background: none !important;
+  }
+
+  .send-btn {
+    width: 2rem;
+    height: 2rem;
+    margin: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.126);
+    border-radius: 50%;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+    }
+  }
+}
