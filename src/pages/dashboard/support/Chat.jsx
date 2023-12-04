@@ -12,32 +12,58 @@ function ChatSection() {
   const [replyMessage, setReplyMessage] = useState('');
   let { chat } = messages;
 
-  const handleReply = () => {
+  const handleReply = async () => {
     if (replyMessage.trim() !== '') {
-      // Dispatch an action to send the reply
-      dispatch(dashboardAPI.replyMessages({ user_id: userId?.c_id, message: replyMessage.trim(), message_type: 0 }));
-      fetchMsg();
+      // Optimistically update local state
+      const optimisticMessage = {
+        id: Date.now(), // Use a unique identifier, you can generate it differently if needed
+        admin_id: 1,
+        c_id: 12,
+        message: replyMessage.trim(),
+        message_type: 0,
+        read_status: 0,
+        deleted: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
       dispatch(
         setUserMessage({
           ...messages,
-          chat: [
-            ...messages.chat,
-            {
-              id: 117,
-              admin_id: 1,
-              c_id: 12,
-              message: replyMessage?.trim(),
-              message_type: 0,
-              read_status: 0,
-              deleted: 0,
-              created_at: '2023-11-28 15:47:15',
-              updated_at: '2023-11-28 15:47:15',
-            },
-          ],
+          chat: [...messages.chat, optimisticMessage],
         }),
       );
 
       setReplyMessage('');
+
+      try {
+        // Dispatch an action to send the reply
+        await dispatch(
+          dashboardAPI.replyMessages({ user_id: userId?.c_id, message: replyMessage.trim(), message_type: 0 }),
+        );
+
+        // Fetch updated messages after the reply is successful
+        fetchMsg();
+
+        // Add a class to the newly added message for animation
+        const newMessageIndex = messages.chat.findIndex((message) => message.id === optimisticMessage.id);
+        const newMessageElement = document.querySelector(`.chat-message-item-${newMessageIndex}`);
+        if (newMessageElement) {
+          newMessageElement.classList.add('chat-message-enter');
+          // Optionally add a delay class for staggered animations
+          newMessageElement.classList.add(`chat-message-enter-delay-${newMessageIndex}`);
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+
+        // Revert the optimistic update in case of an error
+        dispatch(
+          setUserMessage({
+            ...messages,
+            chat: messages.chat.filter((message) => message.id !== optimisticMessage.id),
+          }),
+        );
+      }
     }
   };
 
@@ -156,7 +182,7 @@ function ChatSection() {
                       return (
                         <React.Fragment key={idx}>
                           {chi?.admin_id != null ? (
-                            <li className="d-flex gap-4 justify-content-end mb-4">
+                            <li className={`d-flex gap-4 justify-content-end mb-4 chat-message-item-${idx}`}>
                               <img
                                 src={`https://api.dicebear.com/7.x/initials/svg?seed=admin`}
                                 alt="avatar"

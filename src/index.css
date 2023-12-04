@@ -34,9 +34,9 @@ body,
 }
 
 .chat-scroll {
-  padding-bottom: 8rem;
   height: 90%;
   width: 100%;
+  margin-bottom: 5rem;
   position: relative;
   ::-webkit-scrollbar {
     display: none;
@@ -47,3 +47,27 @@ body,
   overflow: hidden !important;
   height: 100vh;
 }
+
+/* Add this to your CSS */
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Apply the animation to the chat message */
+.chat-message-enter {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Optionally add a delay to stagger the animations for multiple messages */
+.chat-message-enter-delay-1 {
+  animation-delay: 0.1s;
+}
+
+/* Add more delay classes if needed */
