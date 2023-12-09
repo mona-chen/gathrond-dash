@@ -4,7 +4,7 @@ import './App.css';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import { dashboard_routes } from './routes/dashboard';
 import { auth_routes } from './routes/auth';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import PrivateRoute from './components/guard/PrivateRoute';
 import Toasty from './components/common/toast/toast';
 import store from './redux/store';

@@ -8,7 +8,7 @@ import { icons } from '../../../assets/icons/icons';
 
 function ChatSection() {
   const dispatch = useDispatch();
-  const { all_messages, messages } = useSelector((state) => state.dashboard);
+  const { all_messages, messages, socket_events } = useSelector((state) => state.dashboard);
   const [replyMessage, setReplyMessage] = useState('');
   let { chat } = messages;
 
@@ -27,32 +27,21 @@ function ChatSection() {
         updated_at: new Date().toISOString(),
       };
 
-      dispatch(
-        setUserMessage({
-          ...messages,
-          chat: [...messages.chat, optimisticMessage],
-        }),
-      );
+      // dispatch(
+      //   setUserMessage({
+      //     ...messages,
+      //     chat: [...messages.chat, optimisticMessage],
+      //   }),
+      // );
 
       setReplyMessage('');
+      scrollToBottom();
 
       try {
         // Dispatch an action to send the reply
         await dispatch(
           dashboardAPI.replyMessages({ user_id: userId?.c_id, message: replyMessage.trim(), message_type: 0 }),
         );
-
-        // Fetch updated messages after the reply is successful
-        fetchMsg();
-
-        // Add a class to the newly added message for animation
-        const newMessageIndex = messages.chat.findIndex((message) => message.id === optimisticMessage.id);
-        const newMessageElement = document.querySelector(`.chat-message-item-${newMessageIndex}`);
-        if (newMessageElement) {
-          newMessageElement.classList.add('chat-message-enter');
-          // Optionally add a delay class for staggered animations
-          newMessageElement.classList.add(`chat-message-enter-delay-${newMessageIndex}`);
-        }
       } catch (error) {
         console.error('Error sending message:', error);
 
@@ -67,34 +56,33 @@ function ChatSection() {
     }
   };
 
+  const scrollToBottom = () => {
+    const chat = document.getElementById('chatList');
+
+    chat.scrollIntoView({ behavior: 'smooth' });
+  };
   const [userId, setUserId] = useState(null);
   useEffect(() => {
+    const isSocketEventInMessages = Array.isArray(chat) && chat?.some((d) => d.id === socket_events?.id);
+
+    console.log(isSocketEventInMessages);
     const fetchData = () => {
       dispatch(dashboardAPI.getAllMessages());
 
-      if (userId?.c_id) {
+      if (userId && messages && socket_events?.c_id === userId?.c_id && !isSocketEventInMessages) {
         dispatch(
-          dashboardAPI.getAMessage({
-            user_id: userId?.c_id,
-            message: replyMessage,
-            message_type: 0,
+          setUserMessage({
+            ...messages,
+            chat: [...messages?.chat, socket_events],
           }),
         );
-      }
-      if (all_messages.length > 0) {
-        setUserId(all_messages[0]);
+
+        scrollToBottom();
       }
     };
 
     fetchData();
-
-    // Polling interval in milliseconds (e.g., every 15 seconds)
-    const intervalId = setInterval(fetchData, 15000);
-
-    return () => clearInterval(intervalId);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [socket_events]);
 
   function fetchMsg() {
     dispatch(
@@ -110,13 +98,7 @@ function ChatSection() {
     if (userId !== null) {
       dispatch(dashboardAPI.getAllMessages());
       dispatch(dashboardAPI.readMessage(userId?.c_id));
-      dispatch(
-        dashboardAPI.getAMessage({
-          user_id: userId?.c_id,
-          message: replyMessage,
-          message_type: 0,
-        }),
-      );
+      fetchMsg();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -234,6 +216,8 @@ function ChatSection() {
                     })
                   )}
                 </ul>
+
+                <div style={{ marginBottom: '80px', backgroundColor: 'red' }} id={'chatList'} className="in"></div>
               </div>
 
               {chat && chat?.length > 0 && (

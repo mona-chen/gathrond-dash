@@ -546,3 +546,15 @@ export function formatRelativeDate(dateString) {
     return date.toLocaleDateString([], { hour: 'numeric', minute: '2-digit', month: 'short', day: 'numeric' });
   }
 }
+
+export function debounce(func, delay) {
+  let timerId;
+
+  return function (...args) {
+    clearTimeout(timerId);
+
+    timerId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}

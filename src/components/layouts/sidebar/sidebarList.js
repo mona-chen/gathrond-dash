@@ -43,4 +43,28 @@ export const sideMenuList = [
     link: '/support-chats',
     numb: 'two',
   },
+
+  {
+    name: 'Trades',
+    icon: icons.users,
+    link: '/platform-trades',
+    numb: 'four',
+    children: [
+      {
+        name: 'Subscriptions',
+        link: '/platform-trades',
+        // icon: walletBalanceIcon,
+      },
+      {
+        name: 'Switches',
+        link: '/platform-switches',
+        // icon: walletBalanceIcon,
+      },
+      {
+        name: 'Purchases',
+        link: '/platform-purchases',
+        // icon: walletBalanceIcon,
+      },
+    ],
+  },
 ];

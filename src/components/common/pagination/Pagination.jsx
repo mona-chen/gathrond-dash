@@ -33,9 +33,10 @@ function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange, s
   return (
     <div className="d-flex justify-content-between flex-wrap pt-3">
       <div className="dataTables_info" id="example_info" role="status" aria-live="polite">
-        Showing {(currentPage - 1) * entriesPerPage + 1} to {Math.min(currentPage * entriesPerPage, totalEntries)} of{' '}
-        {totalEntries} entries
+        Showing {Math.min(currentPage * entriesPerPage + 1, totalEntries)} to{' '}
+        {Math.min(currentPage * entriesPerPage + entriesPerPage, totalEntries)} of {totalEntries} entries
       </div>
+
       <nav aria-label="Page navigation example">
         <ul className="pagination">
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>

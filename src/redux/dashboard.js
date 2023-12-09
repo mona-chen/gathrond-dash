@@ -250,15 +250,15 @@ const getAllMessages = createAsyncThunk('admin/chat/get_all_message', async (pay
       payload,
     );
 
-    if (data.status !== 'success') {
-      toast.error(data.message, {
+    if (data?.status !== 'success') {
+      toast.error(data?.message, {
         // theme: 'colored'
       });
       return data;
     }
-    if (data.status === 'success') {
+    if (data?.status === 'success') {
       // toast.success(data.message);
-      await thunkAPI.dispatch(setMessages(data.data));
+      await thunkAPI.dispatch(setMessages(data?.data));
       return data;
     }
   } catch (err) {
@@ -286,7 +286,7 @@ const getAMessage = createAsyncThunk('admin/chat/get_all_message', async (payloa
     }
     if (data.status === 'success') {
       // toast.success(data.message);
-      await thunkAPI.dispatch(setUserMessage(data.data));
+      await thunkAPI.dispatch(setUserMessage(data?.data));
       return data;
     }
   } catch (err) {
@@ -512,6 +512,202 @@ const deleteItem = createAsyncThunk('delete_item', async (payload, thunkAPI) => 
   }
 });
 
+const getPlatformSubscriptions = createAsyncThunk(`get_subscriptions`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(
+      `admin/trades/${payload.url || 'get_subscriptions'}cursor=${payload?.cursor ?? 0}`,
+      payload,
+    );
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setAllSubscriptions(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const getPlatformSwitchedGames = createAsyncThunk(`get_switched_games`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(
+      `admin/trades/${payload.url || 'get_switched_games'}cursor=${payload?.cursor ?? 0}&order_type=1`,
+      payload,
+    );
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setPlatformSwitches(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const getPlatformPurchasedGames = createAsyncThunk(`get_purchased_games`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(
+      `admin/trades/${payload.url || 'get_purchased_games?'}cursor=${payload?.cursor ?? 0}&order_type=0`,
+      payload,
+    );
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setPlatformPurchases(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const searchPlatformPurchases = createAsyncThunk(`search_purchase_games`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(
+      `admin/trades/${payload.url || 'search_purchase_games?'}cursor=${payload?.cursor ?? 0}&search_key=${payload?.q}`,
+      payload,
+    );
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setPlatformPurchases(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const searchPlatformSwitches = createAsyncThunk(`search_switched_games`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(
+      `admin/trades/${payload.url || 'search_switched_games'}cursor=${payload?.cursor ?? 0}&search_key=${payload?.q}`,
+      payload,
+    );
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setPlatformSwitches(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const searchPlatformSubscriptions = createAsyncThunk(`search_subscription`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(
+      `admin/trades/search_subscription?cursor=${payload?.cursor ?? 0}&search_key=${payload?.q}`,
+      payload,
+    );
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data.message);
+      await thunkAPI.dispatch(setAllSubscriptions(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const updatePlatformTrades = createAsyncThunk(`update_order_status`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.post(
+      `admin/trades/${payload.url || 'search_subscription'}cursor=${payload?.cursor ?? 0}&search_key=${payload?.q}`,
+      payload,
+    );
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data.message);
+      // await thunkAPI.dispatch(setAllSubscriptions(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
 export const dashboard = createSlice({
   name: 'dashboard',
   initialState: {
@@ -530,6 +726,10 @@ export const dashboard = createSlice({
     all_messages: [],
     messages: [],
     game_types: [],
+    socket_events: [],
+    all_subscriptions: [],
+    all_switches: [],
+    all_purchases: [],
   },
   reducers: {
     setInStock: (state, action) => {
@@ -575,6 +775,19 @@ export const dashboard = createSlice({
 
     setUserMessage: (state, action) => {
       state.messages = action.payload;
+    },
+
+    setSocketEvents: (state, action) => {
+      state.socket_events = action.payload;
+    },
+    setAllSubscriptions: (state, action) => {
+      state.all_subscriptions = action.payload;
+    },
+    setPlatformSwitches: (state, action) => {
+      state.all_switches = action.payload;
+    },
+    setPlatformPurchases: (state, action) => {
+      state.all_purchases = action.payload;
     },
   },
   extraReducers: {
@@ -709,6 +922,10 @@ export const {
   setUserMessage,
   setAllUserGames,
   setMessages,
+  setSocketEvents,
+  setAllSubscriptions,
+  setPlatformSwitches,
+  setPlatformPurchases,
 } = dashboard.actions;
 
 export const dashboardAPI = {
@@ -731,7 +948,14 @@ export const dashboardAPI = {
   getGameType,
   getAllMessages,
   replyMessages,
+  getPlatformSubscriptions,
+  getPlatformSwitchedGames,
   readMessage,
+  getPlatformPurchasedGames,
+  searchPlatformPurchases,
+  searchPlatformSwitches,
+  searchPlatformSubscriptions,
+  updatePlatformTrades,
 };
 
 export default dashboard.reducer;

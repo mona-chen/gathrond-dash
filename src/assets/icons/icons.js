@@ -59,6 +59,19 @@ export const icons = {
     </svg>
   ),
 
+  eye: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      className="bi bi-eye"
+      viewBox="0 0 16 16"
+    >
+      <path d="M14.832 7.73C13.327 5.88 10.14 4 8 4C5.86 4 2.673 5.88 1.168 7.73a1 1 0 0 0 0 1.538C2.673 10.12 5.86 12 8 12c2.14 0 5.327-1.88 6.832-3.73a1 1 0 0 0 0-1.538zM8 10.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
+    </svg>
+  ),
+
   lazy_bun: (
     <svg width="675" height="356" viewBox="0 0 675 356" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path

@@ -3,9 +3,10 @@ import Loader from '../../../components/common/loader/Loader';
 import Sidebar from '../../../components/layouts/sidebar/Sidebar';
 import Navbar from '../../../components/layouts/menu/Navbar';
 import Footer from '../../../components/layouts/footer/Footer';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCookie } from '../../../utils/helper/Helper';
-import { dashboardAPI } from '../../../redux/dashboard';
+import { dashboardAPI, setSocketEvents } from '../../../redux/dashboard';
+import bell from '../../../assets/sound/bell.mp3';
 
 const DashboardLayout = ({ children, loading }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,33 @@ const DashboardLayout = ({ children, loading }) => {
     }
   }, []);
 
+  const socket = new WebSocket(
+    'wss://free.blr2.piesocket.com/v3/1?api_key=MKiPuDQ31fMrusf9JsuwNKYnyGeTfEmP3w8YfXMq&notify_self=1',
+  );
+
+  useEffect(() => {
+    // Connection opened
+    socket.addEventListener('open', (event) => {
+      // socket.send('Connection established');
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', (event) => {
+      dispatch(setSocketEvents(JSON.parse(event.data)));
+      if (!window.location.href.includes('support-chats')) {
+        playNotificationSound();
+      }
+    });
+  }, []);
+
+  const playNotificationSound = () => {
+    const notificationSound = document.getElementById('notificationSound');
+
+    // Check if the audio element exists and is loaded
+    if (notificationSound && notificationSound.readyState === HTMLAudioElement.HAVE_ENOUGH_DATA) {
+      notificationSound.play();
+    }
+  };
   return (
     <>
       <meta charSet="utf-8" />
@@ -47,6 +75,13 @@ const DashboardLayout = ({ children, loading }) => {
           <Navbar />
         </div>
         <div className="container-fluid content-inner pb-0">{children}</div>
+        <audio
+          style={{ visibility: 'hidden', display: 'none' }}
+          id="notificationSound"
+          src={bell}
+          preload="auto"
+        ></audio>
+
         <Footer />
       </main>
     </>

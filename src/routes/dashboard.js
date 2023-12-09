@@ -6,6 +6,9 @@ import Homepage from '../pages/dashboard/overview/Homepage';
 import ChatSection from '../pages/dashboard/support/Chat';
 import Users from '../pages/dashboard/user/Users';
 import UserGames from '../pages/dashboard/games/components/UserGames';
+import Trades from '../pages/dashboard/trades/trades';
+import Switches from '../pages/dashboard/trades/switches';
+import Purchases from '../pages/dashboard/trades/purchases';
 
 export const dashboard_routes = [
   {
@@ -35,5 +38,20 @@ export const dashboard_routes = [
   {
     path: '/support-chats',
     element: ChatSection,
+  },
+
+  {
+    path: '/platform-trades',
+    element: Trades,
+  },
+
+  {
+    path: '/platform-switches',
+    element: Switches,
+  },
+
+  {
+    path: '/platform-purchases',
+    element: Purchases,
   },
 ];

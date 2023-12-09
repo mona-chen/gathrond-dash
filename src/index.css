@@ -71,3 +71,7 @@ body,
 }
 
 /* Add more delay classes if needed */
+
+html {
+  scroll-behavior: smooth;
+}

@@ -81,10 +81,10 @@ function Sidebar() {
                       <a
                         className={`nav-link  ${isActive(chi.link) ? 'active' : ''} `}
                         data-bs-toggle="collapse"
-                        href="#sidebar-user"
+                        href={`#sidebar-user${idx}`}
                         role="button"
                         aria-expanded="false"
-                        aria-controls="sidebar-user"
+                        aria-controls={`sidebar-user${idx}`}
                       >
                         <i className="icon">
                           <svg width={22} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -104,10 +104,10 @@ function Sidebar() {
                           </svg>
                         </i>
                       </a>
-                      <ul className="sub-nav collapse" id="sidebar-user" data-bs-parent="#sidebar">
+                      <ul className="sub-nav collapse" id={`sidebar-user${idx}`} data-bs-parent="#sidebar">
                         {chi.children.map((x, idx) => {
                           return (
-                            <li key={idx} className="nav-item">
+                            <li style={{ cursor: 'pointer' }} key={idx} className="nav-item pointer-event">
                               <div onClick={() => navigate(x.link)} className="nav-link">
                                 <i className="icon">
                                   <svg
