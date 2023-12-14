@@ -9,15 +9,16 @@ import {
   symbol,
 } from '../../../utils/helper/Helper';
 import { icons } from '../../../assets/icons/icons';
-import GInput from '../../../components/common/inputs/GInputs';
+
 import GModal from '../../../components/common/modal/GModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { dashboardAPI } from '../../../redux/dashboard';
 import Loader from '../../../components/common/loader/Loader';
 import UpdateStatusModal from './component/UpdateStatus';
-import DiscardTransactionModal from './component/DiscardModal';
-import TransactionDetailsModal from './component/TransactionDetails';
+
 import GameSwitchModal from './component/SwitchesModal';
+import GInput from '../../../components/common/inputs/GInputs';
+import Empty from '../../../components/common/empty/index';
 
 const buttonStyle = {
   padding: '10px 15px 10px 15px',
@@ -31,8 +32,8 @@ const buttonStyle = {
 };
 function Switches() {
   const [filter, setFilter] = useState({
-    value: 'get_switched_games?',
-    label: 'All',
+    value: 'get_switched_games?order_type=0&cursor=0',
+    label: 'Pending',
   });
 
   const [deleteModal, setDeleteModal] = useState({
@@ -56,15 +57,56 @@ function Switches() {
   }, [filter, currentPage]);
 
   const { loading } = useSelector((state) => state.dashboard);
-  const { dashboard_summary, all_switches } = useSelector((state) => state.dashboard);
+  const { all_switches } = useSelector((state) => state.dashboard);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [detailsModal, setDetailsModal] = useState(false);
 
-  async function handleDelete(id) {
-    const resp = await dispatch(dashboardAPI.deleteItem({ type: 'game', data: { game_id: id } }));
+  async function handleDelete() {
+    const resp = await dispatch(
+      dashboardAPI.updatePlatformTrades({
+        invoice_id: deleteModal.chi.invoice_id,
+        trade_id: deleteModal.chi.id,
+        url: 'reject_user_trade',
+        game_id: deleteModal.chi.game_id,
+        user_id: deleteModal.chi.c_id,
+        id: deleteModal.chi.id,
+      }),
+    );
 
-    if (resp.payload?.status === 'success') {
-      setDeleteModal(false);
+    setDeleteModal({
+      //chi,
+      on: true,
+    });
+
+    if (resp.payload.data.status === 'success') {
+      await dispatch(
+        dashboardAPI.getPlatformSwitchedGames({
+          url: filter.value,
+          cursor: currentPage,
+        }),
+      );
+    }
+  }
+
+  async function handleUpdate(status) {
+    const resp = await dispatch(
+      dashboardAPI.updatePlatformTrades({
+        invoice_id: editData.invoice_id,
+        status: status,
+        trade_id: editData.id,
+        url: 'update_order_status',
+        user_id: editData.c_id,
+        id: editData.id,
+      }),
+    );
+
+    if (resp.payload.data.status === 'success') {
+      await dispatch(
+        dashboardAPI.getPlatformSwitchedGames({
+          url: filter.value,
+          cursor: currentPage,
+        }),
+      );
     }
   }
 
@@ -81,14 +123,30 @@ function Switches() {
     searchTerm = event.target.value;
 
     if (searchTerm?.length > 4) debouncedSearch(searchTerm);
-    if (searchTerm?.length < 4) dispatch(dashboardAPI.getPlatformSwitchedGames);
+    if (searchTerm?.length < 4)
+      dispatch(
+        dashboardAPI.getPlatformSwitchedGames({
+          url: filter.value,
+          cursor: currentPage,
+        }),
+      );
   }
 
   function handleSearch(e) {
     dispatch(dashboardAPI.searchPlatformSwitches({ q: e }));
   }
 
-  console.log(all_switches);
+  const gameFilters = [
+    {
+      label: 'Pending',
+      value: 'get_switched_games?cursor=0&order_type=0',
+    },
+    {
+      label: 'Completed',
+      value: 'get_switched_games?cursor=0&order_type=1',
+    },
+  ];
+
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -100,6 +158,14 @@ function Switches() {
                   <h4 class="card-title text-white">Switches</h4>
                 </div>
                 <div class="d-flex mt-3 ms-4 me-4 justify-content-between">
+                  <GInput
+                    onChange={setFilter}
+                    value={filter}
+                    chevron
+                    style={buttonStyle}
+                    type="select"
+                    selectOptions={gameFilters}
+                  />
                   <div class="form-outline">
                     <input
                       type="search"
@@ -116,6 +182,8 @@ function Switches() {
                     <>
                       <Loader transparent style={{ width: '100px' }} loading={loading} />
                     </>
+                  ) : order?.length === 0 ? (
+                    <Empty title={`No ${filter.label} Switches Found`} />
                   ) : (
                     <div class="table-responsive">
                       <table class="table">
@@ -131,8 +199,6 @@ function Switches() {
                         </thead>
                         <tbody>
                           {order?.map((chi, idx) => {
-                            const meta = chi?.meta_data;
-
                             return (
                               <tr>
                                 <td>
@@ -195,7 +261,7 @@ function Switches() {
                                       onClick={() =>
                                         setDeleteModal({
                                           ...deleteModal,
-                                          id: chi.id,
+                                          chi: chi,
                                         })
                                       }
                                       data-bs-toggle="tooltip"
@@ -240,25 +306,27 @@ function Switches() {
       </div>
 
       <UpdateStatusModal
-        // show={showUpdateModal}
+        show={showUpdateModal}
         handleClose={() => setShowUpdateModal(false)}
-        handleUpdateStatus={() => {}}
+        handleUpdateStatus={(e) => {
+          handleUpdate(e);
+        }}
       />
-      <DiscardTransactionModal
+      {/* <DiscardTransactionModal
         show={showUpdateModal}
         handleClose={() => setShowUpdateModal(false)}
         handleUpdateStatus={() => {}}
-      />
+      /> */}
       <GModal
         onBtnClick={() => handleDelete(deleteModal.id)}
         shutdown={deleteModal.on}
         danger
         type="centered"
         id="deleteGame"
-        btnLabel={'Yes, Destroy'}
+        btnLabel={'Yes, Discard'}
         dismissible
         loading={loading}
-        title={'Update Status'}
+        title={'Discard Game'}
       >
         <div className="mt-1 mb-5">Are you sure you want to discard this switch request?</div>
       </GModal>

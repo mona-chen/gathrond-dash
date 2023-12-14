@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 const UpdateStatusModal = ({ show, handleClose, handleUpdateStatus }) => {
-  const [status, setStatus] = useState('success'); // Initial status, you can set it to 'failed' if needed
+  const [status, setStatus] = useState('-se'); // Initial status, you can set it to 'failed' if needed
   const [confirm, setConfirm] = useState(false);
 
   const handleStatusChange = (e) => {
@@ -29,15 +29,18 @@ const UpdateStatusModal = ({ show, handleClose, handleUpdateStatus }) => {
         <Form.Group controlId="statusSelect">
           <Form.Label>Select Status</Form.Label>
           <Form.Control as="select" value={status} onChange={handleStatusChange}>
-            <option value="success">Success</option>
-            <option value="failed">Failed</option>
+            <option disabled value="-se">
+              Select Something
+            </option>
+            <option value="0">Pending</option>
+            <option value="1">Completed</option>
           </Form.Control>
         </Form.Group>
         <Form.Group className="mt-5 mb-5" controlId="confirmationCheckbox">
           <Form.Check
             type="checkbox"
             label="I confirm that I want to perform this action"
-            onChange={() => setConfirm((prevConfirm) => !prevConfirm)}
+            onChange={(e) => setConfirm(e.target.checked)}
           />
         </Form.Group>
       </Modal.Body>
@@ -45,7 +48,15 @@ const UpdateStatusModal = ({ show, handleClose, handleUpdateStatus }) => {
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleUpdate} disabled={!confirm}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            handleUpdate();
+            setConfirm(false);
+            setStatus('-se');
+          }}
+          disabled={!confirm || status === '-se'}
+        >
           Update Status
         </Button>
       </Modal.Footer>

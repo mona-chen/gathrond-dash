@@ -4,7 +4,7 @@ import './styles/index.css';
 
 const Empty = ({ title, subTitle }) => {
   return (
-    <div className="w-100 d-flex flex-column gap-5 empty-screen">
+    <div style={{ flex: 1 }} className="w-100 d-flex flex-column gap-5 empty-screen">
       <figure className="w-25">{icons.lazy_bun}</figure>
 
       <span className="w-100 d-flex flex-column gap-2">

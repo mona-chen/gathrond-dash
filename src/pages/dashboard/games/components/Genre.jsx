@@ -268,13 +268,13 @@ function Genre() {
                               <tr key={idx}>
                                 <td>
                                   <div className="d-flex gap-3 justify-content-start align-items-center">
-                                    <figure style={{ width: '80px', height: '80px' }} className="rounded-pill">
+                                    {/* <figure style={{ width: '80px', height: '80px' }} className="rounded-pill">
                                       <img
                                         className="w-100 h-100 rounded-pill  object-fit-contain"
                                         src={chi.image}
                                         alt=""
                                       />
-                                    </figure>
+                                    </figure> */}
                                     <p>{chi.name}</p>
                                   </div>
                                 </td>{' '}

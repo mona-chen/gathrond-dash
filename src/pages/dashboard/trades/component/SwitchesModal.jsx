@@ -1,7 +1,13 @@
 import React from 'react';
 import { Modal, Button, Col, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const GameSwitchModal = ({ show, handleClose, content }) => {
+  const navigate = useNavigate();
+
+  const handleViewUser = (username) => {
+    navigate(`/users?q=${username}`);
+  };
   return (
     <Modal show={show} onHide={handleClose} size="lg" centered>
       <Modal.Header closeButton>
@@ -37,7 +43,10 @@ const GameSwitchModal = ({ show, handleClose, content }) => {
                 <p className="card-text mt-3">Category: {content?.category}</p>
                 <p className="card-text">Genre: {content?.user_game_genre}</p>
                 <p className="card-text">User: {content?.firstname + ' ' + content?.lastname}</p>
-                <Button variant="link" onClick={() => handleViewUser('JohnDoe')}>
+                <Button
+                  variant="link"
+                  onClick={() => handleViewUser(`${content?.firstname + ' ' + content?.lastname}`)}
+                >
                   View User
                 </Button>
               </div>
@@ -55,8 +64,3 @@ const GameSwitchModal = ({ show, handleClose, content }) => {
 };
 
 export default GameSwitchModal;
-
-const handleViewUser = (username) => {
-  // Implement logic to navigate or display user details based on the username
-  console.log(`Viewing user: ${username}`);
-};

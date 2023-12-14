@@ -5,13 +5,16 @@ import SingleUserModal from '../component/SingleUserModal';
 import Pagination from '../../../components/common/pagination/Pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import { dashboardAPI } from '../../../redux/dashboard';
-import { formatDateTime } from '../../../utils/helper/Helper';
+import { debounce, formatDateTime } from '../../../utils/helper/Helper';
+import Empty from '../../../components/common/empty';
+import Loader from '../../../components/common/loader/Loader';
 
 function Users() {
   const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const { dashboard_summary, users } = useSelector((state) => state.dashboard);
+  const [querySearch, setQuerySearch] = useState();
+  const { dashboard_summary, users, loading } = useSelector((state) => state.dashboard);
   const buttonStyle = {
     padding: '10px 15px 10px 15px',
     color: '#fff',
@@ -31,6 +34,42 @@ function Users() {
 
   const all_users = users?.users;
 
+  let searchTerm;
+  function handleSearchInputChange(event) {
+    const debouncedSearch = debounce(handleSearch, 300);
+
+    searchTerm = event.target.value;
+
+    if (searchTerm?.length > 4) debouncedSearch(searchTerm);
+    if (searchTerm?.length < 4) dispatch(dashboardAPI.getUsers());
+  }
+
+  function handleSearch(e) {
+    dispatch(dashboardAPI.getUsers({ url: `search_user?search_key=${e}&cursor=0&` }));
+  }
+
+  function handleQuerySearch(q) {
+    const debouncedSearch = debounce(handleSearch, 300);
+
+    searchTerm = q;
+
+    if (searchTerm?.length > 4) debouncedSearch(searchTerm);
+    if (searchTerm?.length < 4) dispatch(dashboardAPI.getUsers());
+  }
+
+  useEffect(() => {
+    // Get the current URL search parameters
+    const queryParams = new URLSearchParams(window.location.search);
+
+    const searchQuery = queryParams.get('q') || '';
+
+    setQuerySearch(searchQuery);
+
+    if (querySearch?.length > 0) {
+      handleQuerySearch(searchQuery);
+    }
+  }, [querySearch]);
+
   return (
     <>
       <DashboardLayout>
@@ -46,6 +85,8 @@ function Users() {
                     <input
                       type="search"
                       id="form1"
+                      value={searchTerm || querySearch}
+                      onChange={handleSearchInputChange}
                       className="form-control ms-1"
                       placeholder="Search.."
                       aria-label="Search"
@@ -53,48 +94,54 @@ function Users() {
                   </div>
                 </div>
                 <div className="card-body">
-                  <div className="table-responsive">
-                    <table className="table">
-                      <thead className="">
-                        <tr>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Phone</th>
-                          <th>Switches</th>
-                          <th>Joined</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {all_users?.map((chi, idx) => {
-                          return (
-                            <tr
-                              onClick={() =>
-                                setModal({
-                                  on: true,
-                                  chi: chi,
-                                })
-                              }
-                              key={idx}
-                            >
-                              <td>{chi?.firstname + ' ' + chi?.lastname}</td>
-                              <td>{chi?.email}</td>
-                              <td>{chi?.phone}</td>
-                              <td>{chi.all_switch}</td>
-                              <td>{formatDateTime(chi?.created_at)}</td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                    <Pagination
-                      totalEntries={dashboard_summary.user_counts}
-                      currentPage={currentPage}
-                      entriesPerPage={dashboard_summary.cursor_length}
-                      onPageChange={() => {
-                        setCurrentPage((e) => setCurrentPage(e));
-                      }}
-                    />
-                  </div>
+                  {loading ? (
+                    <Loader />
+                  ) : all_users?.length === 0 ? (
+                    <Empty title={'No users found'} />
+                  ) : (
+                    <div className="table-responsive">
+                      <table className="table">
+                        <thead className="">
+                          <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Switches</th>
+                            <th>Joined</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {all_users?.map((chi, idx) => {
+                            return (
+                              <tr
+                                onClick={() =>
+                                  setModal({
+                                    on: true,
+                                    chi: chi,
+                                  })
+                                }
+                                key={idx}
+                              >
+                                <td>{chi?.firstname + ' ' + chi?.lastname}</td>
+                                <td>{chi?.email}</td>
+                                <td>{chi?.phone}</td>
+                                <td>{chi.all_switch}</td>
+                                <td>{formatDateTime(chi?.created_at)}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                      <Pagination
+                        totalEntries={dashboard_summary.user_counts}
+                        currentPage={currentPage}
+                        entriesPerPage={dashboard_summary.cursor_length}
+                        onPageChange={() => {
+                          setCurrentPage((e) => setCurrentPage(e));
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

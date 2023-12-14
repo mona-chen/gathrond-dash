@@ -163,7 +163,10 @@ export const getDashboardData = createAsyncThunk('/admin/dashboard', async (payl
 
 const getUsers = createAsyncThunk('get_all_user?cursor=0', async (payload, thunkAPI) => {
   try {
-    const { data } = await axios.get(`admin/user/get_all_user?cursor=${payload?.cursor ?? 0}`, payload);
+    const { data } = await axios.get(
+      `admin/user/${payload?.url || '/get_all_user'}?cursor=${payload?.cursor ?? 0}`,
+      payload,
+    );
     console.log('register', data);
 
     if (data.status !== 'success') {
@@ -542,10 +545,7 @@ const getPlatformSubscriptions = createAsyncThunk(`get_subscriptions`, async (pa
 
 const getPlatformSwitchedGames = createAsyncThunk(`get_switched_games`, async (payload, thunkAPI) => {
   try {
-    const data = await axios.get(
-      `admin/trades/${payload.url || 'get_switched_games'}cursor=${payload?.cursor ?? 0}&order_type=1`,
-      payload,
-    );
+    const data = await axios.get(`admin/trades/${payload.url || 'get_switched_games'}`, payload);
 
     if (data?.data?.status !== 'success') {
       toast.error(data?.data?.message, {
@@ -627,7 +627,7 @@ const searchPlatformPurchases = createAsyncThunk(`search_purchase_games`, async 
 const searchPlatformSwitches = createAsyncThunk(`search_switched_games`, async (payload, thunkAPI) => {
   try {
     const data = await axios.get(
-      `admin/trades/${payload.url || 'search_switched_games'}cursor=${payload?.cursor ?? 0}&search_key=${payload?.q}`,
+      `admin/trades/${payload.url || 'search_switched_games'}?cursor=${payload?.cursor ?? 0}&search_key=${payload?.q}`,
       payload,
     );
 
@@ -639,6 +639,7 @@ const searchPlatformSwitches = createAsyncThunk(`search_switched_games`, async (
     }
     if (data?.data?.status === 'success') {
       // toast.success(data.message);
+      console.log(data.data?.data);
       await thunkAPI.dispatch(setPlatformSwitches(data.data?.data));
       return data;
     }
@@ -682,10 +683,7 @@ const searchPlatformSubscriptions = createAsyncThunk(`search_subscription`, asyn
 
 const updatePlatformTrades = createAsyncThunk(`update_order_status`, async (payload, thunkAPI) => {
   try {
-    const data = await axios.post(
-      `admin/trades/${payload.url || 'search_subscription'}cursor=${payload?.cursor ?? 0}&search_key=${payload?.q}`,
-      payload,
-    );
+    const data = await axios.post(`admin/trades/${payload.url || 'reject_user_trade'}`, payload);
 
     if (data?.data?.status !== 'success') {
       toast.error(data?.data?.message, {
@@ -694,7 +692,7 @@ const updatePlatformTrades = createAsyncThunk(`update_order_status`, async (payl
       return data;
     }
     if (data?.data?.status === 'success') {
-      // toast.success(data.message);
+      toast.success(data?.data?.message);
       // await thunkAPI.dispatch(setAllSubscriptions(data.data?.data));
       return data;
     }
@@ -901,6 +899,16 @@ export const dashboard = createSlice({
       state.loading = false;
     },
     [deleteItem.rejected]: (state) => {
+      state.loading = false;
+    },
+
+    [updatePlatformTrades.pending]: (state) => {
+      state.loading = true;
+    },
+    [updatePlatformTrades.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [updatePlatformTrades.rejected]: (state) => {
       state.loading = false;
     },
   },

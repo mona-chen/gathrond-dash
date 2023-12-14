@@ -26,7 +26,7 @@ const Homepage = () => {
       <div className="row">
         <div className="d-flex justify-content-between">
           <div>
-            <h2 className="text-primary fw-bold mb-3">Good Morning Confidence</h2>
+            <h2 className="text-primary fw-bold mb-3">Good Morning Admin</h2>
             <p>Here is a snapshot of platform's performance 😎</p>
           </div>
           <div>
@@ -213,7 +213,7 @@ const Homepage = () => {
                             <tr key={idx} className="white-space-no-wrap">
                               <td>
                                 <img
-                                  src={chi?.image}
+                                  src={chi?.image_url}
                                   className="img-fluid avatar avatar-30 avatar-rounded"
                                   alt="img23"
                                 />
@@ -317,7 +317,7 @@ const Homepage = () => {
                     return (
                       <li key={idx} className="team-chat">
                         <div className="flex-shrink-0 align-self-start team-chat-body">
-                          <img src={chi?.image} className="img-fluid avatar avatar-40 avatar-rounded" alt="img6" />
+                          <img src={chi?.image_url} className="img-fluid avatar avatar-40 avatar-rounded" alt="img6" />
                         </div>
                         <div className="flex-grow-1 ms-3 team-chat-body">
                           <div className="d-flex align-items-center mb-2">

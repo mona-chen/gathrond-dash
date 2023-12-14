@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import DashboardLayout from '../../../components/layouts/dashboard/DashboardLayout';
 import Pagination from '../../../components/common/pagination/Pagination';
-import { capitalizeFirstLetter, formatDateTime, formatNumWithComma, symbol } from '../../../utils/helper/Helper';
+import {
+  capitalizeFirstLetter,
+  debounce,
+  formatDateTime,
+  formatNumWithComma,
+  symbol,
+} from '../../../utils/helper/Helper';
 import { icons } from '../../../assets/icons/icons';
 import GOffCanvas from '../../../components/common/offCanvas/OffCanvas';
 import GInput from '../../../components/common/inputs/GInputs';
@@ -194,6 +200,26 @@ function Games() {
     genresRef.current = new Genres(all_genres);
   }, [all_categories, all_genres]);
 
+  let searchTerm;
+  function handleSearchInputChange(event) {
+    const debouncedSearch = debounce(handleSearch, 300);
+
+    searchTerm = event.target.value;
+
+    if (searchTerm?.length > 4) debouncedSearch(searchTerm);
+    if (searchTerm?.length < 4)
+      dispatch(
+        dashboardAPI.getAllGames({
+          url: filter.value,
+          cursor: currentPage,
+        }),
+      );
+  }
+
+  function handleSearch(e) {
+    dispatch(dashboardAPI.getAllGames({ url: `search_games?search_key=${e}&cursor=0&` }));
+  }
+
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -226,6 +252,7 @@ function Games() {
                       type="search"
                       id="form1"
                       class="form-control ms-1"
+                      onChange={handleSearchInputChange}
                       placeholder="Search.."
                       aria-label="Search"
                     />
@@ -259,7 +286,7 @@ function Games() {
                                     <figure style={{ width: '50px', height: '50px' }} className="rounded-pill">
                                       <img
                                         className="w-100 h-100 rounded-pill  object-fit-contain"
-                                        src={chi.image}
+                                        src={chi.image_url}
                                         alt=""
                                       />
                                     </figure>

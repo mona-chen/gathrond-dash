@@ -244,7 +244,7 @@ function Category() {
                                     <figure style={{ width: '80px', height: '80px' }} className="rounded-pill">
                                       <img
                                         className="w-100 h-100 rounded-pill  object-fit-contain"
-                                        src={chi.image_key}
+                                        src={chi.image_url}
                                         alt=""
                                       />
                                     </figure>

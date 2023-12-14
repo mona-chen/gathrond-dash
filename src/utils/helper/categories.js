@@ -53,21 +53,21 @@ export class Categories extends Component {
     setInterval(this.init, 100);
   }
 
-  mid = jcat ? transformArray(jcat) : '';
+  mid = jcat ? transformArray(jcat) : [];
   max = jcat;
 
   filter = (id) => {
-    if (!this.mid) {
+    if (!this.mid || !Array.isArray(this.mid)) {
       // Handle the case when categories.mid is undefined or null
       return [];
     }
 
-    const label = this?.mid ? this?.mid?.find((c) => c.value === id) : '';
+    const label = this.mid ? this.mid.find((c) => c.value === id) : [];
     return label ?? []; // This will be the matching object or undefined
   };
 
   reset = () => {
-    setCookie('categories', '', 0);
+    setCookie('categories', [], 0);
   };
 }
 
@@ -83,7 +83,7 @@ export class Genres extends Component {
     setInterval(this.init, 100);
   }
 
-  mid = jgen ? transformArray(jgen) : '';
+  mid = jgen ? transformArray(jgen) : [];
   max = jgen ?? [];
 
   listen = () => {
@@ -92,18 +92,18 @@ export class Genres extends Component {
   };
 
   filter = (id) => {
-    if (!this.mid) {
+    if (!this.mid || !Array.isArray(this.mid)) {
       // Handle the case when categories.mid is undefined or null
       return [];
     }
 
     // Access Redux state
-    const label = this?.mid ? this?.mid?.find((c) => c.value === id) : '';
+    const label = this?.mid ? this?.mid?.find((c) => c.value === id) : [];
     return label ?? []; // This will be the matching object or undefined
   };
 
   reset = () => {
-    setCookie('genres', '', 0);
+    setCookie('genres', [], 0);
   };
 }
 
@@ -120,21 +120,21 @@ export class GameTypes extends Component {
     setInterval(this.init, 100);
   }
 
-  mid = jgtp ? transformArray(jgtp) : '';
+  mid = jgtp ? transformArray(jgtp) : [];
   max = jgtp;
 
   filter = (id) => {
-    if (!this.mid) {
+    if (!this.mid || !Array.isArray(this.mid)) {
       // Handle the case when categories.mid is undefined or null
       return [];
     }
 
-    const label = this?.mid ? this?.mid?.find((c) => c.value === id) : '';
+    const label = this?.mid ? this?.mid?.find((c) => c.value === id) : [];
     return label ?? []; // This will be the matching object or undefined
   };
 
   reset = () => {
-    setCookie('game_types', '', 0);
+    setCookie('game_types', [], 0);
   };
 }
 

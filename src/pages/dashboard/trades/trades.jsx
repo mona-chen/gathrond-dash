@@ -67,10 +67,6 @@ function Trades() {
     }
   }
 
-  useEffect(() => {
-    dispatch(dashboardAPI.getPlatformSubscriptions);
-  }, []);
-
   const { trades } = all_subscriptions;
 
   let searchTerm;
@@ -80,7 +76,13 @@ function Trades() {
     searchTerm = event.target.value;
 
     if (searchTerm?.length > 4) debouncedSearch(searchTerm);
-    if (searchTerm?.length < 4) dispatch(dashboardAPI.getPlatformSubscriptions);
+    if (searchTerm?.length < 4)
+      dispatch(
+        dashboardAPI.getPlatformSubscriptions({
+          url: filter.value,
+          cursor: currentPage,
+        }),
+      );
   }
 
   function handleSearch(e) {

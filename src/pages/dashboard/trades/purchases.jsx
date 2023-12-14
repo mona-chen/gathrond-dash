@@ -67,10 +67,6 @@ function Purchases() {
     }
   }
 
-  useEffect(() => {
-    dispatch(dashboardAPI.getPlatformSwitchedGames);
-  }, []);
-
   const { order } = all_purchases;
 
   console.log(all_purchases);
@@ -82,7 +78,13 @@ function Purchases() {
     searchTerm = event.target.value;
 
     if (searchTerm?.length > 4) debouncedSearch(searchTerm);
-    if (searchTerm?.length < 4) dispatch(dashboardAPI.getPlatformPurchasedGames);
+    if (searchTerm?.length < 4)
+      dispatch(
+        dashboardAPI.getPlatformPurchasedGames({
+          url: filter.value,
+          cursor: currentPage,
+        }),
+      );
   }
 
   function handleSearch(e) {
