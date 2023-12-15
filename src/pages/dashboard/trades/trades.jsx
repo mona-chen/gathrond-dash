@@ -126,7 +126,7 @@ function Trades() {
                             <th>BANK</th>
                             <th>Amount</th>
                             <th>Session ID</th>
-                            <th>Status</th>
+                            <th>Session ID</th>
                             <th>Created At</th>
                             <th></th>
                           </tr>

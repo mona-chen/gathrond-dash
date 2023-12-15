@@ -571,7 +571,7 @@ const getPlatformSwitchedGames = createAsyncThunk(`get_switched_games`, async (p
 const getPlatformPurchasedGames = createAsyncThunk(`get_purchased_games`, async (payload, thunkAPI) => {
   try {
     const data = await axios.get(
-      `admin/trades/${payload.url || 'get_purchased_games?'}cursor=${payload?.cursor ?? 0}&order_type=0`,
+      `admin/trades/${payload.url || 'get_purchased_games?order_type=0&'}cursor=${payload?.cursor ?? 0}`,
       payload,
     );
 

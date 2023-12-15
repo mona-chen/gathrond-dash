@@ -30,7 +30,7 @@ const buttonStyle = {
 };
 function Purchases() {
   const [filter, setFilter] = useState({
-    value: 'get_purchased_games?',
+    value: 'get_purchased_games?order_type=0&',
     label: 'All',
   });
 
@@ -69,8 +69,6 @@ function Purchases() {
 
   const { order } = all_purchases;
 
-  console.log(all_purchases);
-
   let searchTerm;
   function handleSearchInputChange(event) {
     const debouncedSearch = debounce(handleSearch, 300);
@@ -90,6 +88,17 @@ function Purchases() {
   function handleSearch(e) {
     dispatch(dashboardAPI.searchPlatformPurchases({ q: e }));
   }
+
+  const gameFilters = [
+    {
+      label: 'Pending',
+      value: 'get_purchased_games?order_type=0&',
+    },
+    {
+      label: 'Approved',
+      value: 'get_purchased_games?order_type=1&',
+    },
+  ];
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -101,6 +110,14 @@ function Purchases() {
                   <h4 class="card-title text-white">Purchases</h4>
                 </div>
                 <div class="d-flex mt-3 ms-4 me-4 justify-content-between">
+                  <GInput
+                    onChange={setFilter}
+                    value={filter}
+                    chevron
+                    style={buttonStyle}
+                    type="select"
+                    selectOptions={gameFilters}
+                  />
                   <div class="form-outline">
                     <input
                       type="search"
@@ -132,7 +149,7 @@ function Purchases() {
                         </thead>
                         <tbody>
                           {order?.map((chi, idx) => {
-                            const meta = chi.meta_data[0];
+                            const meta = chi?.meta_data ? chi?.meta_data[0] : [];
                             console.log(chi);
                             return (
                               <tr>
@@ -189,9 +206,12 @@ function Purchases() {
                                       onClick={() => {
                                         setEditData({
                                           ...meta,
+
                                           image: chi?.image,
                                           address: chi?.address,
                                           gameName: chi?.game_name,
+                                          invoice_id: chi?.invoice_id,
+                                          phone: chi?.phone,
                                         });
                                         setDetailsModal(true); //
                                       }}
@@ -283,6 +303,8 @@ function Purchases() {
           'Account Name ': editData?.meta_data ? JSON.parse(editData?.meta_data)?.account_name : '',
           'Account NO ': editData?.receiving_account_number,
           'Bank ': editData?.bank_name,
+          'Invoice ID': editData?.invoice_id,
+          Phone: editData?.phone,
           // 'Bal Before(admin) ': editData?.balance_state
           //   ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_before)
           //   : '',

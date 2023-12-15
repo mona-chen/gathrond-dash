@@ -248,28 +248,31 @@ function Switches() {
                                 <td>{formatDateTime(chi.created_at)}</td>
                                 <td>
                                   <div className="d-flex gap-4">
-                                    <figure
-                                      onClick={() => {
-                                        setEditData({ ...chi, game_id: chi.id, game_type_id: chi.game_type });
-                                        setShowUpdateModal(true); //
-                                      }}
-                                      data-bs-toggle="tooltip"
-                                      data-bs-placement="top"
-                                      title="Edit Game"
-                                    >
-                                      <svg
-                                        // data-bs-toggle="offcanvas"
-                                        // data-bs-target="#editGame"
-                                        // aria-controls="editGame"
-                                        width={22}
-                                        viewBox="0 0 30 30"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                    {chi?.order_status === 0 ? (
+                                      <figure
+                                        onClick={() => {
+                                          setEditData({ ...chi, game_id: chi.id, game_type_id: chi.game_type });
+                                          setShowUpdateModal(true); //
+                                        }}
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="Edit Game"
                                       >
-                                        {icons.pencil}
-                                      </svg>{' '}
-                                    </figure>
-
+                                        <svg
+                                          // data-bs-toggle="offcanvas"
+                                          // data-bs-target="#editGame"
+                                          // aria-controls="editGame"
+                                          width={22}
+                                          viewBox="0 0 30 30"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          {icons.pencil}
+                                        </svg>{' '}
+                                      </figure>
+                                    ) : (
+                                      ''
+                                    )}
                                     <figure
                                       onClick={() => {
                                         setEditData(chi);
@@ -282,30 +285,34 @@ function Switches() {
                                       {icons.eye}
                                     </figure>
 
-                                    <figure
-                                      onClick={() =>
-                                        setDeleteModal({
-                                          ...deleteModal,
-                                          chi: chi,
-                                        })
-                                      }
-                                      data-bs-toggle="tooltip"
-                                      data-bs-placement="top"
-                                      title="Destroy Game"
-                                    >
-                                      <svg
-                                        color="red"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteGame"
-                                        aria-controls="deleteGame"
-                                        width={22}
-                                        viewBox="0 0 30 30"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                    {chi?.order_status === 0 ? (
+                                      <figure
+                                        onClick={() =>
+                                          setDeleteModal({
+                                            ...deleteModal,
+                                            chi: chi,
+                                          })
+                                        }
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="Destroy Game"
                                       >
-                                        {icons.delete}
-                                      </svg>{' '}
-                                    </figure>
+                                        <svg
+                                          color="red"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#deleteGame"
+                                          aria-controls="deleteGame"
+                                          width={22}
+                                          viewBox="0 0 30 30"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          {icons.delete}
+                                        </svg>{' '}
+                                      </figure>
+                                    ) : (
+                                      ''
+                                    )}
                                   </div>
                                 </td>
                               </tr>
@@ -364,6 +371,8 @@ function Switches() {
           'Account Name ': editData?.meta_data ? JSON.parse(editData?.meta_data)?.account_name : '',
           'Account NO ': editData?.receiving_account_number,
           'Bank ': editData?.bank_name,
+          'Invoice ID': editData?.invoice_id,
+          Phone: editData?.phone,
           // 'Bal Before(admin) ': editData?.balance_state
           //   ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_before)
           //   : '',

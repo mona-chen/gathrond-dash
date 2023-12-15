@@ -26,6 +26,8 @@ const GameSwitchModal = ({ show, handleClose, content }) => {
                   {content?.description?.slice(0, 90)}...
                 </small>
                 <p className="card-text mt-3">Category: {content?.category}</p>
+                <p className="card-text mt-3">Invoice ID: {content?.invoice_id}</p>
+                <p className="card-text mt-3">Phone: {content?.phone}</p>
                 <p className="card-text">Genre: {content?.genre}</p>
                 <p style={{ fontSize: 14, marginBottom: '-4px' }} className="text-primary ">
                   Delivery Address:
@@ -47,6 +49,8 @@ const GameSwitchModal = ({ show, handleClose, content }) => {
                   {content?.user_game_description?.slice(0, 90)}...
                 </small>
                 <p className="card-text mt-3">Category: {content?.category}</p>
+                <p className="card-text mt-3">Invoice ID: {content?.invoice_id}</p>
+                <p className="card-text mt-3">Phone: {content?.phone}</p>
                 <p className="card-text">Genre: {content?.user_game_genre}</p>
                 <p className="card-text">User: {content?.firstname + ' ' + content?.lastname}</p>
                 <Button variant="link" onClick={() => handleViewUser(content?.email)}>
