@@ -88,6 +88,8 @@ function Trades() {
   function handleSearch(e) {
     dispatch(dashboardAPI.searchPlatformSubscriptions({ q: e }));
   }
+
+  console.log(editData);
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -121,7 +123,7 @@ function Trades() {
                         <thead class="">
                           <tr>
                             <th>Recipient</th>
-                            <th>Recipient</th>
+                            <th>BANK</th>
                             <th>Amount</th>
                             <th>Session ID</th>
                             <th>Created At</th>
@@ -174,7 +176,7 @@ function Trades() {
 
                                     <figure
                                       onClick={() => {
-                                        setEditData(meta);
+                                        setEditData({ ...meta, image: chi?.image });
                                         setDetailsModal(true); //
                                       }}
                                       data-bs-toggle="tooltip"
@@ -259,6 +261,7 @@ function Trades() {
       <TransactionDetailsModal
         handleClose={() => setDetailsModal(false)}
         show={detailsModal}
+        image={editData?.image}
         transactionDetails={{
           'Account Name ': editData?.meta_data ? JSON.parse(editData?.meta_data)?.account_name : '',
           'Account NO ': editData?.receiving_account_number,

@@ -5,6 +5,9 @@ import utilImg03 from '../../../assets/images/utilities/03.png';
 import utilImg02 from '../../../assets/images/utilities/02.png';
 import avatar01 from '../../../assets/images/avatars/01.png';
 import coin06 from '../../../assets/images/coins/06.png';
+import { icons } from '../../../assets/icons/icons';
+import logoIcon from '../../../assets/images/logoIcon.svg';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const sidebarToggle = () => {
@@ -15,6 +18,8 @@ function Navbar() {
       sidebar.classList.add('sidebar-mini');
     }
   };
+
+  const navigate = useNavigate();
   return (
     <nav className="nav navbar navbar-expand-lg navbar-light iq-navbar">
       <div className="container-fluid navbar-inner">
@@ -27,12 +32,8 @@ function Navbar() {
           </i>
         </div>
         <div className="header-logo d-xl-none">
-          <a href="../dashboard/index.html" className="navbar-brand dis-none">
-            <svg width={35} viewBox="0 0 52 58" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x={7} y={5} width="11.4716" height={48} fill="#9C2224" />
-              <rect x="33.5283" y={5} width="11.4716" height={48} fill="#9C2224" />
-              <path d="M7 5H18.4716L44.9997 53H33.5281L7 5Z" fill="#9C2224" />
-            </svg>
+          <a onClick={() => navigate('/dashboard')} className="navbar-brand dis-none">
+            <img src={logoIcon} alt="" />
           </a>
         </div>
         <div className="input-group search-input">

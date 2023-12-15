@@ -33,7 +33,7 @@ const UpdateStatusModal = ({ show, handleClose, handleUpdateStatus }) => {
               Select Something
             </option>
             <option value="0">Pending</option>
-            <option value="1">Completed</option>
+            <option value="1">Approved</option>
           </Form.Control>
         </Form.Group>
         <Form.Group className="mt-5 mb-5" controlId="confirmationCheckbox">

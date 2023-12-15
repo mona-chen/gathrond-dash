@@ -122,10 +122,10 @@ function Purchases() {
                       <table class="table">
                         <thead class="">
                           <tr>
-                            <th>Recipient</th>
-                            <th>Recipient</th>
+                            <th>Game Name</th>
+                            <th>Bank</th>
                             <th>Amount</th>
-                            <th>Session ID</th>
+                            <th>Description</th>
                             <th>Created At</th>
                             <th></th>
                           </tr>
@@ -133,12 +133,19 @@ function Purchases() {
                         <tbody>
                           {order?.map((chi, idx) => {
                             const meta = chi.meta_data[0];
-
+                            console.log(chi);
                             return (
                               <tr>
                                 <td>
                                   <div className="d-flex gap-3 justify-content-start align-items-center">
-                                    <p>{chi.firstname + ' ' + chi?.lastname}</p>
+                                    <figure style={{ width: '50px', height: '50px' }} className="rounded-pill">
+                                      <img
+                                        className="w-100 h-100 rounded-pill  object-fit-contain"
+                                        src={chi?.image}
+                                        alt=""
+                                      />
+                                    </figure>
+                                    <p>{chi?.game_name}</p>
                                   </div>
                                 </td>
                                 <td>
@@ -148,7 +155,11 @@ function Purchases() {
                                   </div>
                                 </td>
                                 <td>{symbol('ngn') + formatNumWithComma(chi?.amount, 'ngn')}</td>
-                                <td>{meta?.session_id}</td>
+                                <td>
+                                  {chi?.description.length > 50
+                                    ? chi?.description.slice(0, 50) + '...'
+                                    : chi?.description}
+                                </td>
                                 <td>{formatDateTime(chi.created_at)}</td>
                                 <td>
                                   <div className="d-flex gap-4">
@@ -176,7 +187,12 @@ function Purchases() {
 
                                     <figure
                                       onClick={() => {
-                                        setEditData(meta);
+                                        setEditData({
+                                          ...meta,
+                                          image: chi?.image,
+                                          address: chi?.address,
+                                          gameName: chi?.game_name,
+                                        });
                                         setDetailsModal(true); //
                                       }}
                                       data-bs-toggle="tooltip"
@@ -260,8 +276,10 @@ function Purchases() {
 
       <TransactionDetailsModal
         handleClose={() => setDetailsModal(false)}
+        image={editData.image}
         show={detailsModal}
         transactionDetails={{
+          'Game Name': editData?.gameName,
           'Account Name ': editData?.meta_data ? JSON.parse(editData?.meta_data)?.account_name : '',
           'Account NO ': editData?.receiving_account_number,
           'Bank ': editData?.bank_name,
@@ -273,6 +291,7 @@ function Purchases() {
             : '',
           'Settled Amount ': formatNumWithComma(editData?.settled_amount, 'ngn'),
           'Transaction Amount ': formatNumWithComma(editData?.transaction_amount, 'ngn'),
+          Address: editData?.address,
         }}
       />
     </DashboardLayout>

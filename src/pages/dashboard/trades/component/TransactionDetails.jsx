@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button, ListGroup } from 'react-bootstrap';
 
-const TransactionDetailsModal = ({ show, handleClose, transactionDetails }) => {
+const TransactionDetailsModal = ({ show, handleClose, transactionDetails, image }) => {
   const renderDetails = () => {
     return Object.entries(transactionDetails).map(([key, value]) => (
       <ListGroup.Item key={key}>
@@ -15,7 +15,10 @@ const TransactionDetailsModal = ({ show, handleClose, transactionDetails }) => {
       <Modal.Header closeButton>
         <Modal.Title>Transaction Details</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
+        {image && <img src={image} className="card-img-top" alt="Game Image" />}
+
         {Object.keys(transactionDetails).length === 0 ? (
           <p>No details available.</p>
         ) : (

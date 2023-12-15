@@ -142,10 +142,12 @@ function Switches() {
       value: 'get_switched_games?cursor=0&order_type=0',
     },
     {
-      label: 'Completed',
+      label: 'Approved',
       value: 'get_switched_games?cursor=0&order_type=1',
     },
   ];
+
+  console.log(order);
 
   return (
     <DashboardLayout>
@@ -190,9 +192,9 @@ function Switches() {
                         <thead class="">
                           <tr>
                             <th>Game Name</th>
+                            <th>Game Name(User)</th>
                             <th>Category</th>
-                            <th>Amount</th>
-                            <th>Session ID</th>
+                            <th>Category(User) </th>
                             <th>Created At</th>
                             <th></th>
                           </tr>
@@ -201,25 +203,42 @@ function Switches() {
                           {order?.map((chi, idx) => {
                             return (
                               <tr>
+                                {/* Game Name */}
                                 <td>
                                   <div className="d-flex gap-3 justify-content-start align-items-center">
                                     <figure style={{ width: '50px', height: '50px' }} className="rounded-pill">
                                       <img
                                         className="w-100 h-100 rounded-pill  object-fit-contain"
-                                        src={chi.user_game_image}
+                                        src={chi?.image}
                                         alt=""
                                       />
                                     </figure>
-                                    <p>{chi.user_game_name}</p>
+                                    <p>{chi.game_name}</p>
                                   </div>
                                 </td>
+
+                                {/* Game Name (User) */}
+                                <td>
+                                  <div className="d-flex gap-3 justify-content-start align-items-center">
+                                    <figure style={{ width: '50px', height: '50px' }} className="rounded-pill">
+                                      <img
+                                        className="w-100 h-100 rounded-pill  object-fit-contain"
+                                        src={chi?.user_game_image}
+                                        alt=""
+                                      />
+                                    </figure>
+                                    <p>{chi?.user_game_name}</p>
+                                  </div>
+                                </td>
+
+                                {/*  */}
                                 <td>
                                   <div className="d-flex justify-content-start flex-column align-items-start">
                                     <p>{chi?.category}</p>
                                   </div>
                                 </td>
-                                <td>{symbol('ngn') + formatNumWithComma(chi?.amount, 'ngn')}</td>
-                                <td>{chi?.genre}</td>
+                                <td>{chi?.user_game_category}</td>
+
                                 <td>{formatDateTime(chi.created_at)}</td>
                                 <td>
                                   <div className="d-flex gap-4">

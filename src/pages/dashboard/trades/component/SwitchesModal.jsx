@@ -27,6 +27,12 @@ const GameSwitchModal = ({ show, handleClose, content }) => {
                 </small>
                 <p className="card-text mt-3">Category: {content?.category}</p>
                 <p className="card-text">Genre: {content?.genre}</p>
+                <p style={{ fontSize: 14, marginBottom: '-4px' }} className="text-primary ">
+                  Delivery Address:
+                </p>
+                <small style={{ fontSize: 12 }} className="card-text">
+                  {content?.address}
+                </small>
               </div>
             </div>
           </Col>
@@ -43,10 +49,7 @@ const GameSwitchModal = ({ show, handleClose, content }) => {
                 <p className="card-text mt-3">Category: {content?.category}</p>
                 <p className="card-text">Genre: {content?.user_game_genre}</p>
                 <p className="card-text">User: {content?.firstname + ' ' + content?.lastname}</p>
-                <Button
-                  variant="link"
-                  onClick={() => handleViewUser(`${content?.firstname + ' ' + content?.lastname}`)}
-                >
+                <Button variant="link" onClick={() => handleViewUser(content?.email)}>
                   View User
                 </Button>
               </div>
