@@ -75,3 +75,17 @@ body,
 html {
   scroll-behavior: smooth;
 }
+
+.order-status {
+  padding: 8px 20px;
+  border-radius: 72px;
+  color: orange;
+  background-color: rgba(255, 166, 0, 0.215);
+}
+
+.approved {
+  padding: 8px 20px;
+  border-radius: 72px;
+  color: greenyellow;
+  background-color: rgba(172, 255, 47, 0.245);
+}

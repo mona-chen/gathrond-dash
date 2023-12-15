@@ -283,12 +283,12 @@ function Purchases() {
           'Account Name ': editData?.meta_data ? JSON.parse(editData?.meta_data)?.account_name : '',
           'Account NO ': editData?.receiving_account_number,
           'Bank ': editData?.bank_name,
-          'Bal Before(admin) ': editData?.balance_state
-            ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_before)
-            : '',
-          'Bal After(admin) ': editData?.balance_state
-            ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_after)
-            : '',
+          // 'Bal Before(admin) ': editData?.balance_state
+          //   ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_before)
+          //   : '',
+          // 'Bal After(admin) ': editData?.balance_state
+          //   ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_after)
+          //   : '',
           'Settled Amount ': formatNumWithComma(editData?.settled_amount, 'ngn'),
           'Transaction Amount ': formatNumWithComma(editData?.transaction_amount, 'ngn'),
           Address: editData?.address,

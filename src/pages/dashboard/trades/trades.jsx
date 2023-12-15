@@ -126,6 +126,7 @@ function Trades() {
                             <th>BANK</th>
                             <th>Amount</th>
                             <th>Session ID</th>
+                            <th>Status</th>
                             <th>Created At</th>
                             <th></th>
                           </tr>
@@ -149,6 +150,11 @@ function Trades() {
                                 </td>
                                 <td>{symbol('ngn') + formatNumWithComma(chi?.amount, 'ngn')}</td>
                                 <td>{meta?.session_id}</td>
+                                <td>
+                                  <div className={`order-status ${chi?.order_status === 1 ? 'approved' : ''}`}>
+                                    {chi?.order_status === 0 ? 'Pending' : 'Approved'}
+                                  </div>
+                                </td>
                                 <td>{formatDateTime(chi.created_at)}</td>
                                 <td>
                                   <div className="d-flex gap-4">
@@ -266,12 +272,12 @@ function Trades() {
           'Account Name ': editData?.meta_data ? JSON.parse(editData?.meta_data)?.account_name : '',
           'Account NO ': editData?.receiving_account_number,
           'Bank ': editData?.bank_name,
-          'Bal Before(admin) ': editData?.balance_state
-            ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_before)
-            : '',
-          'Bal After(admin) ': editData?.balance_state
-            ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_after)
-            : '',
+          // 'Bal Before(admin) ': editData?.balance_state
+          //   ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_before)
+          //   : '',
+          // 'Bal After(admin) ': editData?.balance_state
+          //   ? formatNumWithComma(JSON.parse(editData?.balance_state)?.balance_after)
+          //   : '',
           'Settled Amount ': formatNumWithComma(editData?.settled_amount, 'ngn'),
           'Transaction Amount ': formatNumWithComma(editData?.transaction_amount, 'ngn'),
         }}
