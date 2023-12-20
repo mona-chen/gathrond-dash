@@ -13,6 +13,7 @@ function Users() {
   const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState(1);
   const [querySearch, setQuerySearch] = useState();
   const { dashboard_summary, users, loading } = useSelector((state) => state.dashboard);
   const buttonStyle = {
@@ -34,11 +35,10 @@ function Users() {
 
   const all_users = users?.users;
 
-  let searchTerm;
   function handleSearchInputChange(event) {
     const debouncedSearch = debounce(handleSearch, 300);
 
-    searchTerm = event.target.value;
+    setSearchTerm(event.target.value);
 
     if (searchTerm?.length > 4) debouncedSearch(searchTerm);
     if (searchTerm?.length < 4) dispatch(dashboardAPI.getUsers());
@@ -51,7 +51,7 @@ function Users() {
   function handleQuerySearch(q) {
     const debouncedSearch = debounce(handleSearch, 300);
 
-    searchTerm = q;
+    setSearchTerm(q);
 
     if (searchTerm?.length > 4) debouncedSearch(searchTerm);
     if (searchTerm?.length < 4) dispatch(dashboardAPI.getUsers());

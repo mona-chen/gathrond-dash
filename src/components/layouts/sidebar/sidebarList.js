@@ -19,11 +19,11 @@ export const sideMenuList = [
         // icon: walletBalanceIcon,
       },
 
-      {
-        name: 'All User Games',
-        link: '/user-games',
-        // icon: walletBalanceIcon,
-      },
+      // {
+      //   name: 'All User Games',
+      //   link: '/user-games',
+      //   // icon: walletBalanceIcon,
+      // },
 
       {
         name: 'Game Categories',

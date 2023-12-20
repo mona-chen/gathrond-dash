@@ -205,7 +205,7 @@ const getAllGames = createAsyncThunk('get_all_user?cursor=0', async (payload, th
     }
     if (data.status === 'success') {
       // toast.success(data.message);
-      await thunkAPI.dispatch(setAllUsers(data.data.games));
+      await thunkAPI.dispatch(setAllGames(data.data));
       return data;
     }
   } catch (err) {
@@ -742,7 +742,7 @@ export const dashboard = createSlice({
     setSubscriptions: (state, action) => {
       state.subscriptions = action.payload;
     },
-    setAllUsers: (state, action) => {
+    setAllGames: (state, action) => {
       state.all_games = action.payload;
     },
 
@@ -921,7 +921,7 @@ export const {
   setUserGames,
   setSubscriptions,
   setInStock,
-  setAllUsers,
+  setAllGames,
   setUsers,
   setGenres,
   setCategories,

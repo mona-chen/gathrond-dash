@@ -55,7 +55,7 @@ function Games() {
       value: 'get_all_games',
     },
     {
-      label: 'In Stock',
+      label: 'For Sale',
       value: 'get_games_in_stock',
     },
     {
@@ -71,7 +71,6 @@ function Games() {
   const dispatch = useDispatch();
   const all_categories = useSelector((state) => state.dashboard)?.categories;
   const all_genres = useSelector((state) => state.dashboard)?.genres;
-  const all_game_types = useSelector((state) => state.dashboard)?.categories;
 
   useEffect(() => {
     dispatch(
@@ -81,7 +80,20 @@ function Games() {
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, currentPage]);
+  }, [currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(0);
+
+    dispatch(
+      dashboardAPI.getAllGames({
+        url: filter.value,
+        cursor: currentPage,
+      }),
+    );
+    // esli
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   const categoryRef = useRef(new Categories(all_categories));
 
@@ -278,7 +290,7 @@ function Games() {
                           </tr>
                         </thead>
                         <tbody>
-                          {all_games?.map((chi, idx) => {
+                          {all_games?.games?.map((chi, idx) => {
                             return (
                               <tr>
                                 <td>
@@ -352,7 +364,7 @@ function Games() {
                         </tbody>
                       </table>
                       <Pagination
-                        totalEntries={dashboard_summary.total_games}
+                        totalEntries={all_games?.cursor_length}
                         currentPage={currentPage}
                         entriesPerPage={dashboard_summary.cursor_length}
                         onPageChange={(e) => {

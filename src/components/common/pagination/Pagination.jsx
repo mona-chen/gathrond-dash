@@ -13,7 +13,7 @@ function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange, s
   };
 
   // Calculate the range of page numbers to display
-  const startPage = Math.max(1, currentPage - Math.floor(maxPageLinks / 2));
+  const startPage = Math.max(0, currentPage - Math.floor(maxPageLinks / 2));
   const endPage = Math.min(totalPages, startPage + maxPageLinks - 1);
 
   const renderPageNumbers = () => {
@@ -39,7 +39,7 @@ function Pagination({ totalEntries, entriesPerPage, currentPage, onPageChange, s
 
       <nav aria-label="Page navigation example">
         <ul className="pagination">
-          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+          <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
             <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} aria-label="Previous">
               <span aria-hidden="true">
                 <svg width="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

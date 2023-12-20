@@ -17,6 +17,7 @@ import Loader from '../../../components/common/loader/Loader';
 import UpdateStatusModal from './component/UpdateStatus';
 import DiscardTransactionModal from './component/DiscardModal';
 import TransactionDetailsModal from './component/TransactionDetails';
+import UpdatePurchase from './component/UpdatePurchases';
 
 const buttonStyle = {
   padding: '10px 15px 10px 15px',
@@ -30,7 +31,7 @@ const buttonStyle = {
 };
 function Purchases() {
   const [filter, setFilter] = useState({
-    value: 'get_purchased_games?order_type=0&',
+    value: 'get_purchased_games?order_type=0&cursor=0&',
     label: 'All',
   });
 
@@ -92,13 +93,36 @@ function Purchases() {
   const gameFilters = [
     {
       label: 'Pending',
-      value: 'get_purchased_games?order_type=0&',
+      value: 'get_purchased_games?order_type=0&cursor=0&',
     },
     {
       label: 'Approved',
-      value: 'get_purchased_games?order_type=1&',
+      value: 'get_purchased_games?order_type=1&cursor=0&',
     },
   ];
+
+  async function handleUpdate(status) {
+    const resp = await dispatch(
+      dashboardAPI.updatePlatformTrades({
+        invoice_id: editData.invoice_id,
+        status: status,
+        trade_id: editData.id,
+        url: 'update_order_status?cursor=0',
+        user_id: editData.c_id,
+        id: editData.id,
+      }),
+    );
+
+    if (resp.payload.data.status === 'success') {
+      await dispatch(
+        dashboardAPI.getPlatformSwitchedGames({
+          url: filter.value,
+          cursor: currentPage,
+        }),
+      );
+    }
+  }
+
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -180,7 +204,7 @@ function Purchases() {
                                 <td>{formatDateTime(chi.created_at)}</td>
                                 <td>
                                   <div className="d-flex gap-4">
-                                    {/* <figure
+                                    <figure
                                       onClick={() => {
                                         setEditData({ ...chi, game_id: chi.id, game_type_id: chi.game_type });
                                         setShowUpdateModal(true); //
@@ -189,18 +213,22 @@ function Purchases() {
                                       data-bs-placement="top"
                                       title="Edit Game"
                                     >
-                                      <svg
-                                        // data-bs-toggle="offcanvas"
-                                        // data-bs-target="#editGame"
-                                        // aria-controls="editGame"
-                                        width={22}
-                                        viewBox="0 0 30 30"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        {icons.pencil}
-                                      </svg>{' '}
-                                    </figure> */}
+                                      {chi?.order_status === 0 ? (
+                                        <svg
+                                          // data-bs-toggle="offcanvas"
+                                          // data-bs-target="#editGame"
+                                          // aria-controls="editGame"
+                                          width={22}
+                                          viewBox="0 0 30 30"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          {icons.pencil}
+                                        </svg>
+                                      ) : (
+                                        ''
+                                      )}
+                                    </figure>
 
                                     <figure
                                       onClick={() => {
@@ -270,17 +298,19 @@ function Purchases() {
         </div>
       </div>
 
-      <UpdateStatusModal
-        // show={showUpdateModal}
+      <UpdatePurchase
+        show={showUpdateModal}
         handleClose={() => setShowUpdateModal(false)}
-        handleUpdateStatus={() => {}}
+        handleUpdateStatus={(e) => {
+          handleUpdate(e);
+        }}
       />
-      <DiscardTransactionModal
+      {/* <DiscardTransactionModal
         show={showUpdateModal}
         handleClose={() => setShowUpdateModal(false)}
         handleUpdateStatus={() => {}}
-      />
-      <GModal
+      /> */}
+      {/* <GModal
         onBtnClick={() => handleDelete(deleteModal.id)}
         shutdown={deleteModal.on}
         danger
@@ -292,7 +322,7 @@ function Purchases() {
         title={'Update Status'}
       >
         <div className="mt-1 mb-5">Are you sure you want to update the status of this item to game?</div>
-      </GModal>
+      </GModal> */}
 
       <TransactionDetailsModal
         handleClose={() => setDetailsModal(false)}

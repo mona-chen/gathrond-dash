@@ -39,7 +39,6 @@ function Genre() {
   const [editImage, setEditImage] = useState();
   const [addImage, setAddImage] = useState();
   const [uploading, setUploading] = useState(false);
-  const { all_games } = useSelector((state) => state.dashboard);
   const editImageRef = useRef(null);
   const addImageRef = useRef(null);
 
@@ -49,7 +48,7 @@ function Genre() {
       value: 'get_all_games',
     },
     {
-      label: 'In Stock',
+      label: 'For Sale',
       value: 'get_games_in_stock',
     },
     {

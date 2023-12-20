@@ -30,9 +30,9 @@ const Homepage = () => {
             <p>Here is a snapshot of platform's performance 😎</p>
           </div>
           <div>
-            <a href="#" className="btn btn-sm btn-primary">
+            {/* <a href="#" className="btn btn-sm btn-primary">
               More Games
-            </a>
+            </a> */}
           </div>
         </div>
         <div className="col-lg-12 mt-3">
@@ -191,7 +191,7 @@ const Homepage = () => {
             <div className="col-lg-12">
               <div className="d-flex flex-wrap justify-content-between align-items-center mb-2">
                 <div className="caption">
-                  <h4 className="font-weight-bold mb-2">Games in Stock</h4>
+                  <h4 className="font-weight-bold mb-2">Games for Sale</h4>
                   {/* <p className="mb-2">Accept the Challenge</p> */}
                 </div>
                 <div className="text-center">

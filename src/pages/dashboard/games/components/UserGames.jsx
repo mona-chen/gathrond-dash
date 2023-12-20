@@ -55,7 +55,7 @@ function UserGames() {
       value: 'get_all_user_games',
     },
     {
-      label: 'In Stock',
+      label: 'For Sale',
       value: 'get_games_in_stock',
     },
     {
