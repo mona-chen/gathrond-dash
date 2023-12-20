@@ -13,7 +13,6 @@ const SwitchedGames = ({ user }) => {
     dispatch(dashboardAPI.getUserPurchase({ id: 1 }));
   }, [user?.id]);
 
-  console.log(user_switched_games);
   return (
     <div className="row">
       <div className="col-sm-12">

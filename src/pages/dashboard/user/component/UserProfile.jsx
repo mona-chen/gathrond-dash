@@ -129,7 +129,7 @@ function UserProfile({ chi }) {
                         </label>
                         <input type="text" className="form-control" id="add2" placeholder="Street Address 2" />
                       </div>
-                      <div className="form-group col-md-12">
+                      <div className="form-group col-md-6">
                         <label className="form-label" htmlFor="cname">
                           State:
                         </label>
@@ -139,7 +139,20 @@ function UserProfile({ chi }) {
                           type="text"
                           className="form-control"
                           id="state"
-                          placeholder="Company Name"
+                          placeholder="e.g Lagos"
+                        />
+                      </div>
+                      <div className="form-group col-md-6">
+                        <label className="form-label" htmlFor="cname">
+                          Switches:
+                        </label>
+                        <input
+                          value={formData?.all_switch}
+                          onChange={handleChange}
+                          type="text"
+                          className="form-control"
+                          id="all_switch"
+                          placeholder=""
                         />
                       </div>
                     </div>

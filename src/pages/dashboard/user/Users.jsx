@@ -12,8 +12,8 @@ import Loader from '../../../components/common/loader/Loader';
 function Users() {
   const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const [querySearch, setQuerySearch] = useState();
   const { dashboard_summary, users, loading } = useSelector((state) => state.dashboard);
   const buttonStyle = {
@@ -70,6 +70,16 @@ function Users() {
     }
   }, [querySearch]);
 
+  useEffect(() => {
+    dispatch(
+      dashboardAPI.getUsers({
+        cursor: currentPage,
+      }),
+    );
+
+    console.log('it hits', currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
   return (
     <>
       <DashboardLayout>
@@ -133,11 +143,11 @@ function Users() {
                         </tbody>
                       </table>
                       <Pagination
-                        totalEntries={dashboard_summary.user_counts}
+                        totalEntries={users?.cursor_length}
                         currentPage={currentPage}
                         entriesPerPage={dashboard_summary.cursor_length}
-                        onPageChange={() => {
-                          setCurrentPage((e) => setCurrentPage(e));
+                        onPageChange={(e) => {
+                          setCurrentPage(e);
                         }}
                       />
                     </div>

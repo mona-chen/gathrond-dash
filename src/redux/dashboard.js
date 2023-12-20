@@ -518,7 +518,7 @@ const deleteItem = createAsyncThunk('delete_item', async (payload, thunkAPI) => 
 const getPlatformSubscriptions = createAsyncThunk(`get_subscriptions`, async (payload, thunkAPI) => {
   try {
     const data = await axios.get(
-      `admin/trades/${payload.url || 'get_subscriptions'}cursor=${payload?.cursor ?? 0}`,
+      `admin/trades/${payload.url || 'get_subscriptions'}&cursor=${payload?.cursor ?? 0}`,
       payload,
     );
 
@@ -545,7 +545,10 @@ const getPlatformSubscriptions = createAsyncThunk(`get_subscriptions`, async (pa
 
 const getPlatformSwitchedGames = createAsyncThunk(`get_switched_games`, async (payload, thunkAPI) => {
   try {
-    const data = await axios.get(`admin/trades/${payload.url || 'get_switched_games'}`, payload);
+    const data = await axios.get(
+      `admin/trades/${payload.url || 'get_switched_games?cursor=0'}&cursor=${payload.cursor}`,
+      payload,
+    );
 
     if (data?.data?.status !== 'success') {
       toast.error(data?.data?.message, {

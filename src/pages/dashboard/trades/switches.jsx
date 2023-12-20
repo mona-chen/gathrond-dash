@@ -32,7 +32,7 @@ const buttonStyle = {
 };
 function Switches() {
   const [filter, setFilter] = useState({
-    value: 'get_switched_games?order_type=0&cursor=0',
+    value: 'get_switched_games?order_type=0',
     label: 'Pending',
   });
 
@@ -54,7 +54,17 @@ function Switches() {
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, currentPage]);
+  }, [currentPage]);
+
+  useEffect(() => {
+    dispatch(
+      dashboardAPI.getPlatformSwitchedGames({
+        url: filter.value,
+        cursor: 0,
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   const { loading } = useSelector((state) => state.dashboard);
   const { all_switches } = useSelector((state) => state.dashboard);
@@ -127,7 +137,7 @@ function Switches() {
       dispatch(
         dashboardAPI.getPlatformSwitchedGames({
           url: filter.value,
-          cursor: currentPage,
+          cursor: 0,
         }),
       );
   }
@@ -139,15 +149,13 @@ function Switches() {
   const gameFilters = [
     {
       label: 'Pending',
-      value: 'get_switched_games?cursor=0&order_type=0',
+      value: 'get_switched_games?order_type=0',
     },
     {
       label: 'Approved',
-      value: 'get_switched_games?cursor=0&order_type=1',
+      value: 'get_switched_games?order_type=1',
     },
   ];
-
-  console.log(order);
 
   return (
     <DashboardLayout>
@@ -321,8 +329,8 @@ function Switches() {
                         </tbody>
                       </table>
                       <Pagination
-                        totalEntries={4}
-                        currentPage={all_switches?.cursor}
+                        totalEntries={all_switches?.cursor_length}
+                        currentPage={currentPage}
                         entriesPerPage={20}
                         onPageChange={(e) => {
                           setCurrentPage(e);
