@@ -40,9 +40,10 @@ function Users() {
     const debouncedSearch = debounce(handleSearch, 300);
 
     setSearchTerm(event.target.value);
+    setQuerySearch(event.target.value);
 
     if (searchTerm?.length > 4) debouncedSearch(searchTerm);
-    if (searchTerm?.length < 4) dispatch(dashboardAPI.getUsers());
+    if (searchTerm?.length < 4 && querySearch?.length < 4) dispatch(dashboardAPI.getUsers());
   }
 
   function handleSearch(e) {
@@ -55,7 +56,11 @@ function Users() {
     setSearchTerm(q);
 
     if (searchTerm?.length > 4) debouncedSearch(searchTerm);
-    if (searchTerm?.length < 4) dispatch(dashboardAPI.getUsers());
+    if (searchTerm?.length < 4 && querySearch?.length < 4) {
+      setTimeout(() => {
+        dispatch(dashboardAPI.getUsers());
+      }, 500);
+    }
   }
 
   useEffect(() => {
@@ -66,40 +71,35 @@ function Users() {
 
     setQuerySearch(searchQuery);
 
-    setTimeout(() => {
-      if (querySearch || querySearch?.length > 0) {
-        window.location.reload();
-        handleQuerySearch(searchQuery);
-      }
-    }, 1000);
-  }, [querySearch]);
+    if (querySearch || querySearch?.length > 3) {
+      handleQuerySearch(searchQuery);
+    }
+  }, [querySearch, searchTerm]);
 
   useEffect(() => {
-    if (querySearch?.length < 4) {
+    if (all_users?.length > 0 && searchTerm?.length < 4 && querySearch?.length < 4) {
       dispatch(
         dashboardAPI.getUsers({
           cursor: currentPage,
         }),
       );
-    } else {
-      handleQuerySearch(querySearch);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
+  useEffect(() => {
     const searchInput = document.getElementById('searchInput');
     const searchParams = new URLSearchParams(window.location.search);
 
     searchInput.addEventListener('input', () => {
       if (searchInput.value.length > 0) {
         searchParams.set('q', searchInput.value);
-        setQuerySearch(searchInput.value);
       } else {
         searchParams.delete('q');
       }
       window.history.pushState(null, null, `?${searchParams.toString()}`);
     });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, []);
 
   return (
     <>

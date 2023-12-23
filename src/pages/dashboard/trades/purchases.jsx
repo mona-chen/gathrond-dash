@@ -60,14 +60,6 @@ function Purchases() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [detailsModal, setDetailsModal] = useState(false);
 
-  async function handleDelete(id) {
-    const resp = await dispatch(dashboardAPI.deleteItem({ type: 'game', data: { game_id: id } }));
-
-    if (resp.payload?.status === 'success') {
-      setDeleteModal(false);
-    }
-  }
-
   const { order } = all_purchases;
 
   let searchTerm;
@@ -123,6 +115,17 @@ function Purchases() {
     }
   }
 
+  useEffect(() => {
+    dispatch(
+      dashboardAPI.getPlatformSwitchedGames({
+        url: filter.value,
+        cursor: currentPage,
+      }),
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -135,7 +138,10 @@ function Purchases() {
                 </div>
                 <div class="d-flex mt-3 ms-4 me-4 justify-content-between">
                   <GInput
-                    onChange={setFilter}
+                    onChange={(e) => {
+                      setFilter(e);
+                      setCurrentPage(0);
+                    }}
                     value={filter}
                     chevron
                     style={buttonStyle}
@@ -164,9 +170,10 @@ function Purchases() {
                         <thead class="">
                           <tr>
                             <th>Game Name</th>
-                            <th>Bank</th>
+                            <th>Category</th>
                             <th>Amount</th>
                             <th>Description</th>
+                            <th>Status</th>
                             <th>Created At</th>
                             <th></th>
                           </tr>
@@ -191,7 +198,7 @@ function Purchases() {
                                 </td>
                                 <td>
                                   <div className="d-flex justify-content-start flex-column align-items-start">
-                                    <small className="">{meta?.bank_name}</small>
+                                    <small className="">{chi?.category}</small>
                                     <p>{meta?.receiving_account_number}</p>
                                   </div>
                                 </td>
@@ -200,6 +207,11 @@ function Purchases() {
                                   {chi?.description.length > 50
                                     ? chi?.description.slice(0, 50) + '...'
                                     : chi?.description}
+                                </td>
+                                <td>
+                                  <div className={`order-status ${chi?.order_status === 1 ? 'approved' : ''}`}>
+                                    {chi?.order_status === 0 ? 'Pending' : 'Approved'}
+                                  </div>
                                 </td>
                                 <td>{formatDateTime(chi.created_at)}</td>
                                 <td>
@@ -282,8 +294,8 @@ function Purchases() {
                         </tbody>
                       </table>
                       <Pagination
-                        totalEntries={4}
-                        currentPage={all_purchases?.cursor}
+                        totalEntries={all_purchases?.cursor_length}
+                        currentPage={currentPage}
                         entriesPerPage={20}
                         onPageChange={(e) => {
                           setCurrentPage(e);

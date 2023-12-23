@@ -10,16 +10,19 @@ let jcat;
 let jgen;
 let jgtp;
 
-function transformArray(arr) {
-  if (cat || gen) {
-    return arr?.map((item) => ({
+const transformArray = (arr) => {
+  const newArr = [
+    {
+      value: null,
+      label: 'Click to select',
+    },
+    ...arr?.map((item) => ({
       value: item.id,
       label: item.name,
-    }));
-  } else {
-    return 'none';
-  }
-}
+    })),
+  ];
+  return newArr;
+};
 
 var checkCookie = () => {
   var lastCookie = document.cookie;
@@ -135,16 +138,6 @@ export class GameTypes extends Component {
 
   reset = () => {
     setCookie('game_types', [], 0);
-  };
-}
-
-function debounce(func, delay) {
-  let timeout;
-  return function () {
-    const context = this;
-    const args = arguments;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(context, args), delay);
   };
 }
 

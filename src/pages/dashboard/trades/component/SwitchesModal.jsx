@@ -6,7 +6,7 @@ const GameSwitchModal = ({ show, handleClose, content }) => {
   const navigate = useNavigate();
 
   const handleViewUser = (username) => {
-    navigate(`/users?q=${username}`);
+    window.location.replace(`${window.location.origin}/users?q=${username}`);
   };
   return (
     <Modal show={show} onHide={handleClose} size="lg" centered>
