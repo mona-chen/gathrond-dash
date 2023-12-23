@@ -129,8 +129,8 @@ function ChatSection() {
                             <div className="d-flex flex-row">
                               <img
                                 src={`https://api.dicebear.com/7.x/initials/svg?seed=${chi?.firstname}`}
-                                alt="avatar"
-                                className="rounded-circle avatar d-flex align-self-center me-3 shadow-1-strong"
+                                alt="avatar-40"
+                                className="rounded-circle avatar-40 d-flex align-self-center me-3 shadow-1-strong"
                                 width={60}
                               />
                               <div className="pt-1">
@@ -167,8 +167,8 @@ function ChatSection() {
                             <li className={`d-flex gap-4 justify-content-end mb-4 chat-message-item-${idx}`}>
                               <img
                                 src={`https://api.dicebear.com/7.x/initials/svg?seed=admin`}
-                                alt="avatar"
-                                className="rounded-circle d-flex avatar align-self-start me-3 shadow-1-strong"
+                                alt="avatar-40"
+                                className="rounded-circle d-flex avatar-40 align-self-start me-3 shadow-1-strong"
                                 width={60}
                               />
                               <div className="card mask-custom">
@@ -205,8 +205,8 @@ function ChatSection() {
                               </div>
                               <img
                                 src={`https://api.dicebear.com/7.x/initials/svg?seed=${userId?.firstname}`}
-                                alt="avatar"
-                                className="rounded-circle d-flex avatar align-self-start ms-3 shadow-1-strong"
+                                alt="avatar-40"
+                                className="rounded-circle d-flex avatar-40 align-self-start ms-3 shadow-1-strong"
                                 width={60}
                               />
                             </li>

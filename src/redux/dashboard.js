@@ -493,7 +493,7 @@ const readMessage = createAsyncThunk('reply-messages', async (payload, thunkAPI)
 });
 const deleteItem = createAsyncThunk('delete_item', async (payload, thunkAPI) => {
   try {
-    const { data } = await axios.delete(`admin/game/delete_${payload.type}`, payload.data);
+    const { data } = await axios.post(`admin/game/delete_${payload.type}`, payload.data);
 
     if (data.status !== 'success') {
       toast.error(data.message, {

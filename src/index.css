@@ -89,3 +89,13 @@ html {
   color: greenyellow;
   background-color: rgba(172, 255, 47, 0.245);
 }
+
+.custom-scroll {
+  overflow-y: auto;
+  height: 100%;
+  max-height: 20rem;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

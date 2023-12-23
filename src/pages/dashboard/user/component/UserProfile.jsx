@@ -65,7 +65,7 @@ function UserProfile({ chi }) {
                     </div>
 
                     <div className="row">
-                      <small className="form-label">{chi?.all_switch} Switches</small>
+                      <small className="form-label">{chi?.all_switch}Switches</small>
                     </div>
                   </div>
                 </form>

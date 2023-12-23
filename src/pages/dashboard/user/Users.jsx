@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../../../components/layouts/dashboard/DashboardLayout';
 import FullScreenModal from '../../../components/common/modal/fullScreenModal';
@@ -14,7 +15,7 @@ function Users() {
   const [modal, setModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [querySearch, setQuerySearch] = useState();
+  const [querySearch, setQuerySearch] = useState('');
   const { dashboard_summary, users, loading } = useSelector((state) => state.dashboard);
   const buttonStyle = {
     padding: '10px 15px 10px 15px',
@@ -29,7 +30,7 @@ function Users() {
 
   useEffect(() => {
     dispatch(dashboardAPI.getDashboardData());
-    dispatch(dashboardAPI.getUsers());
+    // dispatch(dashboardAPI.getUsers());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -65,21 +66,41 @@ function Users() {
 
     setQuerySearch(searchQuery);
 
-    if (querySearch?.length > 0) {
-      handleQuerySearch(searchQuery);
-    }
+    setTimeout(() => {
+      if (querySearch || querySearch?.length > 0) {
+        window.location.reload();
+        handleQuerySearch(searchQuery);
+      }
+    }, 1000);
   }, [querySearch]);
 
   useEffect(() => {
-    dispatch(
-      dashboardAPI.getUsers({
-        cursor: currentPage,
-      }),
-    );
+    if (querySearch?.length < 4) {
+      dispatch(
+        dashboardAPI.getUsers({
+          cursor: currentPage,
+        }),
+      );
+    } else {
+      handleQuerySearch(querySearch);
+    }
 
-    console.log('it hits', currentPage);
+    const searchInput = document.getElementById('searchInput');
+    const searchParams = new URLSearchParams(window.location.search);
+
+    searchInput.addEventListener('input', () => {
+      if (searchInput.value.length > 0) {
+        searchParams.set('q', searchInput.value);
+        setQuerySearch(searchInput.value);
+      } else {
+        searchParams.delete('q');
+      }
+      window.history.pushState(null, null, `?${searchParams.toString()}`);
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+
   return (
     <>
       <DashboardLayout>
@@ -94,7 +115,7 @@ function Users() {
                   <div className="form-outline">
                     <input
                       type="search"
-                      id="form1"
+                      id="searchInput"
                       value={searchTerm || querySearch}
                       onChange={handleSearchInputChange}
                       className="form-control ms-1"

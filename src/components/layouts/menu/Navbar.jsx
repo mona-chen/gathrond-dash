@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import utilImg05 from '../../../assets/images/utilities/05.png';
 import utilImg04 from '../../../assets/images/utilities/04.png';
@@ -8,6 +9,7 @@ import coin06 from '../../../assets/images/coins/06.png';
 import { icons } from '../../../assets/icons/icons';
 import logoIcon from '../../../assets/images/logoIcon.svg';
 import { useNavigate } from 'react-router-dom';
+import { setCookie } from '../../../utils/helper/Helper';
 
 function Navbar() {
   const sidebarToggle = () => {
@@ -76,7 +78,7 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ms-auto navbar-list mb-2 mb-lg-0 align-items-center">
-            <li className="nav-item dropdown">
+            {/* <li className="nav-item dropdown">
               <a href="#" className="nav-link" id="notification-drop" data-bs-toggle="dropdown">
                 <svg width={22} viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -162,8 +164,9 @@ function Navbar() {
                   </div>
                 </div>
               </div>
-            </li>
-            <li className="nav-item dropdown">
+            </li> */}
+
+            {/* <li className="nav-item dropdown">
               <a
                 href="#"
                 className="nav-link"
@@ -242,7 +245,7 @@ function Navbar() {
                   </div>
                 </div>
               </div>
-            </li>
+            </li> */}
             <li className="nav-item dropdown">
               <a
                 className="nav-link py-0 d-flex align-items-center"
@@ -259,7 +262,7 @@ function Navbar() {
                 </div>
               </a>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li className="border-0">
+                {/* <li className="border-0">
                   <a className="dropdown-item" href="../dashboard/app/user-profile.html">
                     Profile
                   </a>
@@ -268,12 +271,18 @@ function Navbar() {
                   <a className="dropdown-item" href="../dashboard/app/user-privacy-setting.html">
                     Privacy Setting
                   </a>
-                </li>
-                <li className="border-0">
+                </li> */}
+                {/* <li className="border-0">
                   <hr className="m-0 dropdown-divider" />
-                </li>
+                </li> */}
                 <li className="border-0">
-                  <a className="dropdown-item" href="../dashboard/auth/sign-in.html">
+                  <a
+                    onClick={() => {
+                      localStorage.clear();
+                      setCookie('token', '', 0);
+                    }}
+                    className="dropdown-item"
+                  >
                     Logout
                   </a>
                 </li>

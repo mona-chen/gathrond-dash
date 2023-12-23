@@ -15,6 +15,14 @@ const FullScreenModal = ({ id, children, visible, label, onClose }) => {
     }
   }, [visible]);
 
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 27) {
+      onClose();
+    }
+  };
+
+  document.addEventListener('keydown', handleKeyDown);
+
   return (
     <>
       <div class="modal fade" id={id} tabindex="-1" aria-labelledby={label} aria-hidden="true">

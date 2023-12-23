@@ -16,11 +16,6 @@
   align-items: center;
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-}
-
 .reply-button {
   position: absolute;
   border-top: 10px solid rgba(255, 255, 255, 0.1);

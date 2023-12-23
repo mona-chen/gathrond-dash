@@ -260,7 +260,7 @@ const Homepage = () => {
                   <div className="d-flex justify-content-between">
                     <h4 className="card-title">
                       Recommended Games
-                      <span className="dropdown">
+                      {/* <span className="dropdown">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width={25}
@@ -293,9 +293,9 @@ const Homepage = () => {
                             </a>
                           </li>
                         </ul>
-                      </span>
+                      </span> */}
                     </h4>
-                    <button type="button" className="btn btn-sm btn-primary btn-icon">
+                    {/* <button type="button" className="btn btn-sm btn-primary btn-icon">
                       <span className="btn-inner">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -307,11 +307,11 @@ const Homepage = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </span>
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
-              <div className="card-body p-0 team-card">
+              <div className="card-body p-0 team-card custom-scroll">
                 <ul className="list-inline m-0 p-0">
                   {recommended_games.slice(0, 5)?.map((chi, idx) => {
                     return (
@@ -340,7 +340,7 @@ const Homepage = () => {
                           </div>
                           <span className="team-decription">{chi?.description.slice(0, 70)}...</span>
                         </div>
-                        <div className="team-action align-self-start">
+                        {/* <div className="team-action align-self-start">
                           <div className="dropdown">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -377,7 +377,7 @@ const Homepage = () => {
                               </li>
                             </ul>
                           </div>
-                        </div>
+                        </div> */}
                       </li>
                     );
                   })}
