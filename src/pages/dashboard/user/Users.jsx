@@ -30,7 +30,7 @@ function Users() {
 
   useEffect(() => {
     dispatch(dashboardAPI.getDashboardData());
-    // dispatch(dashboardAPI.getUsers());
+    dispatch(dashboardAPI.getUsers());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
