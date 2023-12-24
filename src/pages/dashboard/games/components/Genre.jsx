@@ -208,6 +208,8 @@ function Genre() {
   useEffect(() => {
     genresRef.current = new Genres(all_genres);
   }, [all_genres]);
+  const [editGameModal, setEditGameModal] = useState(false);
+  const [addGame, setAddGame] = useState(false);
 
   return (
     <DashboardLayout>
@@ -219,9 +221,10 @@ function Genre() {
                 <div class="card-header d-flex mb-4 justify-content-between ">
                   <h4 class="card-title text-white">{capitalizeFirstLetter(filter.label)} Genres</h4>
                   <button
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#addGame"
-                    aria-controls="addGame"
+                    // data-bs-toggle="offcanvas"
+                    // data-bs-target="#addGame"
+                    // aria-controls="addGame"
+                    onClick={() => setAddGame(true)}
                     className="btn btn-primary "
                   >
                     Add New
@@ -287,11 +290,12 @@ function Genre() {
                                       title="Edit Genre"
                                     >
                                       <svg
-                                        data-bs-toggle="offcanvas"
-                                        data-bs-target="#editGame"
-                                        aria-controls="editGame"
+                                        // data-bs-toggle="offcanvas"
+                                        // data-bs-target="#editGame"
+                                        // aria-controls="editGame"
                                         width={22}
                                         viewBox="0 0 30 30"
+                                        onClick={() => setEditGameModal(true)}
                                         fill="none"
                                         xmlns="http://www.w3.org/2000/svg"
                                       >
@@ -347,7 +351,7 @@ function Genre() {
         </div>
       </div>
 
-      <GOffCanvas id={'editGame'} title={'Edit Genre'}>
+      <GOffCanvas show={editGameModal} onHide={() => setEditGameModal(false)} title={'Edit Genre'}>
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">
@@ -380,7 +384,7 @@ function Genre() {
         </div>
       </GOffCanvas>
 
-      <GOffCanvas id={'addGame'} title={'Add New Genre'}>
+      <GOffCanvas show={addGame} onHide={() => setAddGame(false)} title={'Add New Genre'}>
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">

@@ -182,6 +182,9 @@ function Category() {
     categoryRef.current = new Categories(all_categories);
   }, [all_categories]);
 
+  const [editGameModal, setEditGameModal] = useState(false);
+  const [addGame, setAddGame] = useState(false);
+
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -192,9 +195,11 @@ function Category() {
                 <div class="card-header d-flex mb-4 justify-content-between ">
                   <h4 class="card-title text-white">{capitalizeFirstLetter(filter.label)} Categories</h4>
                   <button
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#addGame"
-                    aria-controls="addGame"
+                    // data-bs-toggle="offcanvas"
+                    // data-bs-target="#addGame"
+                    // aria-controls="addGame"
+
+                    onClick={() => setAddGame(true)}
                     className="btn btn-primary "
                   >
                     Add New
@@ -254,17 +259,15 @@ function Category() {
                                 <td>
                                   <div className="d-flex gap-4">
                                     <figure
-                                      onClick={() =>
-                                        setEditData({ ...chi, category_id: chi.id, category_name: chi.name })
-                                      }
+                                      onClick={() => {
+                                        setEditData({ ...chi, category_id: chi.id, category_name: chi.name });
+                                        setEditGameModal(true);
+                                      }}
                                       data-bs-toggle="tooltip"
                                       data-bs-placement="top"
                                       title="Edit Category"
                                     >
                                       <svg
-                                        data-bs-toggle="offcanvas"
-                                        data-bs-target="#editGame"
-                                        aria-controls="editGame"
                                         width={22}
                                         viewBox="0 0 30 30"
                                         fill="none"
@@ -321,7 +324,7 @@ function Category() {
         </div>
       </div>
 
-      <GOffCanvas id={'editGame'} title={'Edit Category'}>
+      <GOffCanvas show={editGameModal} onHide={() => setEditGameModal(false)} title={'Edit Category'}>
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">
@@ -359,7 +362,7 @@ function Category() {
         </div>
       </GOffCanvas>
 
-      <GOffCanvas id={'addGame'} title={'Add New Category'}>
+      <GOffCanvas show={addGame} onHide={() => setAddGame(false)} title={'Add New Category'}>
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">

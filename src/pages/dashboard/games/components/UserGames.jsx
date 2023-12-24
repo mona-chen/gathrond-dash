@@ -220,6 +220,9 @@ function UserGames() {
     dispatch(dashboardAPI.getAllGames({ url: `search_games?search_key=${e}&cursor=0&` }));
   }
 
+  const [editGameModal, setEditGameModal] = useState(false);
+  const [addGame, setAddGame] = useState(false);
+
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -364,7 +367,7 @@ function UserGames() {
         </div>
       </div>
 
-      <GOffCanvas id={'editGame'} title={'Edit Game'}>
+      <GOffCanvas show={editGameModal} onHide={() => setEditGameModal(false)} title={'Edit Game'}>
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">
@@ -502,7 +505,7 @@ function UserGames() {
         </div>
       </GOffCanvas>
 
-      <GOffCanvas id={'addGame'} title={'Add New Game'}>
+      <GOffCanvas show={addGame} onHide={() => setAddGame(false)} title={'Add New Game'}>
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">

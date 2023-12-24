@@ -1,20 +1,14 @@
 import React from 'react';
+import { Offcanvas, Button } from 'react-bootstrap';
 
-const GOffCanvas = ({ children, title, id }) => {
+const GOffCanvas = ({ children, title, id, show, onHide }) => {
   return (
-    <div
-      style={{ visibility: 'unset' }}
-      class="offcanvas offcanvas-end"
-      tabindex="-1"
-      id={id}
-      aria-labelledby={`${id}Label`}
-    >
-      <div class="offcanvas-header">
-        {title && <h5 id="offcanvasRightLabel">{title}</h5>}
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">{children}</div>
-    </div>
+    <Offcanvas show={show} onHide={onHide} placement="end" id={id} aria-labelledby={`${id}Label`}>
+      <Offcanvas.Header closeButton>
+        {title && <Offcanvas.Title id={`${id}Label`}>{title}</Offcanvas.Title>}
+      </Offcanvas.Header>
+      <Offcanvas.Body>{children}</Offcanvas.Body>
+    </Offcanvas>
   );
 };
 

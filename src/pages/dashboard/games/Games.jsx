@@ -71,6 +71,8 @@ function Games() {
   const dispatch = useDispatch();
   const all_categories = useSelector((state) => state.dashboard)?.categories;
   const all_genres = useSelector((state) => state.dashboard)?.genres;
+  const [addGame, setAddGame] = useState(false);
+  const [editGameModal, setEditGameModal] = useState(false);
 
   useEffect(() => {
     dispatch(
@@ -161,7 +163,7 @@ function Games() {
       const resp2 = await dispatch(
         dashboardAPI.addItem({
           type: 'games',
-          data: { ...addData, image_key: resp.key },
+          data: { ...addData, recommended: addData?.recommended ?? 0, count: addData?.count ?? 0, image_key: resp.key },
         }),
       );
 
@@ -170,13 +172,15 @@ function Games() {
           game_type_id: '',
           category_id: '',
           count: '',
-          recommended: '',
+          recommended: 0,
           description: '',
           amount: '',
           name: '',
           genre_id: '',
           image_key: '',
         });
+
+        setAddGame(false);
       }
     } else {
       setUploading(false);
@@ -242,9 +246,10 @@ function Games() {
                 <div class="card-header d-flex mb-4 justify-content-between ">
                   <h4 class="card-title text-white">{capitalizeFirstLetter(filter.label)} Games</h4>
                   <button
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#addGame"
-                    aria-controls="addGame"
+                    // data-bs-toggle="offcanvas"
+                    // data-bs-target="#addGame"
+                    // aria-controls="addGame"
+                    onClick={() => setAddGame(true)}
                     className="btn btn-primary "
                   >
                     Add New
@@ -321,9 +326,10 @@ function Games() {
                                       title="Edit Game"
                                     >
                                       <svg
-                                        data-bs-toggle="offcanvas"
-                                        data-bs-target="#editGame"
-                                        aria-controls="editGame"
+                                        // data-bs-toggle="offcanvas"
+                                        // data-bs-target="#editGame"
+                                        // aria-controls="editGame"
+                                        onClick={() => setEditGameModal(true)}
                                         width={22}
                                         viewBox="0 0 30 30"
                                         fill="none"
@@ -380,7 +386,7 @@ function Games() {
         </div>
       </div>
 
-      <GOffCanvas id={'editGame'} title={'Edit Game'}>
+      <GOffCanvas show={editGameModal} onHide={() => setEditGameModal(false)} title={'Edit Game'}>
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">
@@ -518,7 +524,7 @@ function Games() {
         </div>
       </GOffCanvas>
 
-      <GOffCanvas id={'addGame'} title={'Add New Game'}>
+      <GOffCanvas show={addGame} onHide={() => setAddGame(false)} title={'Add New Game'}>
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">
