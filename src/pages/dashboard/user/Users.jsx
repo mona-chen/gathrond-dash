@@ -17,16 +17,7 @@ function Users() {
   const [searchTerm, setSearchTerm] = useState('');
   const [querySearch, setQuerySearch] = useState('');
   const { dashboard_summary, users, loading } = useSelector((state) => state.dashboard);
-  const buttonStyle = {
-    padding: '10px 15px 10px 15px',
-    color: '#fff',
-    backgroundColor: '#202022',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right 1rem center',
-    backgroundSize: '16px 12px',
-    border: '1px solid #69697a',
-    borderRadius: '.5rem',
-  };
+
 
   useEffect(() => {
     dispatch(dashboardAPI.getDashboardData());

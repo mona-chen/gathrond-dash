@@ -4,6 +4,7 @@ import { formatDateTime, formatNumWithComma, symbol } from '../../../../utils/he
 import { useDispatch, useSelector } from 'react-redux';
 import { dashboardAPI } from '../../../../redux/dashboard';
 import Loader from '../../../../components/common/loader/Loader';
+import Empty from '../../../../components/common/empty';
 
 const UserSubscription = ({ user }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,7 +14,7 @@ const UserSubscription = ({ user }) => {
   const { subscriptions, loading } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    dispatch(dashboardAPI.getUserPurchase({ id: 1 }));
+    dispatch(dashboardAPI.getUserPurchase({ id: user?.id }));
   }, []);
 
   function formatStatus(stat) {
@@ -66,7 +67,9 @@ const UserSubscription = ({ user }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {subscriptions?.length > 0 &&
+                    {subscriptions?.length == 0 ? (
+                      <Empty title={'No Trades found for this user'} />
+                    ) : (
                       subscriptions?.map((chi, idx) => {
                         return (
                           <tr
@@ -89,7 +92,8 @@ const UserSubscription = ({ user }) => {
                             <td>{formatDateTime(chi?.created_at)}</td>
                           </tr>
                         );
-                      })}
+                      })
+                    )}
                   </tbody>
                 </table>
                 <Pagination

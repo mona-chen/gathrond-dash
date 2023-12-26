@@ -4,6 +4,7 @@ import { capitalizeFirstLetter, formatDateTime, formatNumWithComma } from '../..
 import { useDispatch, useSelector } from 'react-redux';
 import { dashboardAPI } from '../../../../redux/dashboard';
 import Loader from '../../../../components/common/loader/Loader';
+import Empty from '../../../../components/common/empty';
 
 const UserGames = ({ user }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,29 +48,32 @@ const UserGames = ({ user }) => {
                 </div>
 
                 <div className="w-100 d-flex flex-wrap">
-                  {user_games?.map((chi, idx) => {
-                    const creAt = formatDateTime(chi?.created_at).split(',');
+                  {user_games?.length == 0 ? (
+                    <Empty title={'No Games found for this user'} />
+                  ) : (
+                    user_games?.map((chi, idx) => {
+                      const creAt = formatDateTime(chi?.created_at).split(',');
 
-                    return (
-                      <div
-                        key={idx}
-                        class="swiper-slide swiper-slide-active"
-                        style={{ width: '309px', marginRight: '32px' }}
-                        role="group"
-                        aria-label="1 / 6"
-                      >
-                        <div class="card tournament-card">
-                          <div class="card-header">
-                            <img src={chi?.image} class="img-fluid w-100 iq-img iq-img-shadow-blue" alt="img8" />
-                            <span class="text-primary tournament-label">{creAt[0]}</span>
-                            <span class="tournament-label d-inline-block ms-3"> AT {creAt[2]}</span>
-                            <h6 class="mt-4 tournament-title">{capitalizeFirstLetter(chi?.title)}</h6>
-                          </div>
-                          <div class="card-body d-flex justify-content-between">
-                            <div>
-                              <h6 class="text-primary tournament-label">Category</h6>
-                              <span class="tournament-label">
-                                {/* <svg
+                      return (
+                        <div
+                          key={idx}
+                          class="swiper-slide swiper-slide-active"
+                          style={{ width: '309px', marginRight: '32px' }}
+                          role="group"
+                          aria-label="1 / 6"
+                        >
+                          <div class="card tournament-card">
+                            <div class="card-header">
+                              <img src={chi?.image} class="img-fluid w-100 iq-img iq-img-shadow-blue" alt="img8" />
+                              <span class="text-primary tournament-label">{creAt[0]}</span>
+                              <span class="tournament-label d-inline-block ms-3"> AT {creAt[2]}</span>
+                              <h6 class="mt-4 tournament-title">{capitalizeFirstLetter(chi?.title)}</h6>
+                            </div>
+                            <div class="card-body d-flex justify-content-between">
+                              <div>
+                                <h6 class="text-primary tournament-label">Category</h6>
+                                <span class="tournament-label">
+                                  {/* <svg
                                 width="14"
                                 height="12"
                                 viewBox="0 0 14 12"
@@ -81,10 +85,10 @@ const UserGames = ({ user }) => {
                                   fill="#FF8A00"
                                 ></path>
                               </svg> */}
-                                {chi?.category_name}
-                              </span>
-                            </div>
-                            {/* <div>
+                                  {chi?.category_name}
+                                </span>
+                              </div>
+                              {/* <div>
                               <h6 class="tournament-label text-primary">Switched</h6>
                               <span class="tournament-label">
                                 <svg
@@ -103,30 +107,31 @@ const UserGames = ({ user }) => {
                                 {chi?.switched}
                               </span>
                             </div> */}
-                            <div>
-                              <h6 class="tournament-label text text-primary">Genre</h6>
-                              <span class="tournament-label">
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M7.98712 0C3.78662 0 0.341125 3.2395 0.015625 7.357L4.30212 9.1305C4.67819 8.87401 5.12292 8.73704 5.57812 8.7375C5.61963 8.7375 5.66162 8.74 5.70312 8.74L7.60962 5.9795V5.9405C7.60962 4.2765 8.96112 2.925 10.6251 2.925C12.2891 2.925 13.6431 4.279 13.6431 5.943C13.6421 6.74287 13.3237 7.50964 12.7579 8.07499C12.192 8.64035 11.425 8.9581 10.6251 8.9585H10.5576L7.83862 10.8985C7.83862 10.935 7.84113 10.969 7.84113 11.0055C7.84113 12.2555 6.83063 13.2685 5.58063 13.2685C4.49213 13.2685 3.57012 12.487 3.35912 11.451L0.291625 10.18C1.24213 13.5395 4.32312 16.0005 7.98712 16.0005C12.4036 16.0005 15.9846 12.42 15.9846 8.0005C15.9846 3.581 12.4041 0.0005 7.98712 0.0005V0ZM5.02612 12.1405L4.04413 11.734C4.22497 12.1097 4.53712 12.4062 4.92163 12.5675C5.33782 12.7398 5.80535 12.7401 6.22176 12.5683C6.63817 12.3965 6.96949 12.0666 7.14313 11.651C7.22927 11.4453 7.27384 11.2245 7.27427 11.0015C7.2747 10.7785 7.23098 10.5576 7.14563 10.3515C7.06143 10.1444 6.93673 9.95611 6.77884 9.79779C6.62094 9.63947 6.43303 9.51426 6.22612 9.4295C5.82746 9.26298 5.38016 9.25546 4.97612 9.4085L5.98912 9.828C6.62712 10.096 6.92912 10.828 6.66362 11.466C6.39812 12.104 5.66362 12.406 5.02562 12.1405H5.02612ZM12.6356 5.9375C12.6351 5.40488 12.4235 4.89418 12.0471 4.51733C11.6707 4.14047 11.1602 3.92819 10.6276 3.927C10.0944 3.927 9.58303 4.13882 9.20599 4.51586C8.82895 4.8929 8.61712 5.40428 8.61712 5.9375C8.61712 6.47072 8.82895 6.9821 9.20599 7.35914C9.58303 7.73618 10.0944 7.948 10.6276 7.948C11.1604 7.94721 11.671 7.73505 12.0475 7.35811C12.424 6.98117 12.6355 6.47024 12.6356 5.9375ZM9.12263 5.935C9.12263 5.099 9.79712 4.4245 10.6306 4.4245C11.4641 4.4245 12.1436 5.099 12.1436 5.935C12.1436 6.7685 11.4641 7.4455 10.6306 7.4455C9.79712 7.4455 9.12263 6.7685 9.12263 5.935Z"
-                                    fill="#0F2A80"
-                                  ></path>
-                                </svg>
-                                {'   '}
-                                {chi?.genre_name}
-                              </span>
+                              <div>
+                                <h6 class="tournament-label text text-primary">Genre</h6>
+                                <span class="tournament-label">
+                                  <svg
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 16 16"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M7.98712 0C3.78662 0 0.341125 3.2395 0.015625 7.357L4.30212 9.1305C4.67819 8.87401 5.12292 8.73704 5.57812 8.7375C5.61963 8.7375 5.66162 8.74 5.70312 8.74L7.60962 5.9795V5.9405C7.60962 4.2765 8.96112 2.925 10.6251 2.925C12.2891 2.925 13.6431 4.279 13.6431 5.943C13.6421 6.74287 13.3237 7.50964 12.7579 8.07499C12.192 8.64035 11.425 8.9581 10.6251 8.9585H10.5576L7.83862 10.8985C7.83862 10.935 7.84113 10.969 7.84113 11.0055C7.84113 12.2555 6.83063 13.2685 5.58063 13.2685C4.49213 13.2685 3.57012 12.487 3.35912 11.451L0.291625 10.18C1.24213 13.5395 4.32312 16.0005 7.98712 16.0005C12.4036 16.0005 15.9846 12.42 15.9846 8.0005C15.9846 3.581 12.4041 0.0005 7.98712 0.0005V0ZM5.02612 12.1405L4.04413 11.734C4.22497 12.1097 4.53712 12.4062 4.92163 12.5675C5.33782 12.7398 5.80535 12.7401 6.22176 12.5683C6.63817 12.3965 6.96949 12.0666 7.14313 11.651C7.22927 11.4453 7.27384 11.2245 7.27427 11.0015C7.2747 10.7785 7.23098 10.5576 7.14563 10.3515C7.06143 10.1444 6.93673 9.95611 6.77884 9.79779C6.62094 9.63947 6.43303 9.51426 6.22612 9.4295C5.82746 9.26298 5.38016 9.25546 4.97612 9.4085L5.98912 9.828C6.62712 10.096 6.92912 10.828 6.66362 11.466C6.39812 12.104 5.66362 12.406 5.02562 12.1405H5.02612ZM12.6356 5.9375C12.6351 5.40488 12.4235 4.89418 12.0471 4.51733C11.6707 4.14047 11.1602 3.92819 10.6276 3.927C10.0944 3.927 9.58303 4.13882 9.20599 4.51586C8.82895 4.8929 8.61712 5.40428 8.61712 5.9375C8.61712 6.47072 8.82895 6.9821 9.20599 7.35914C9.58303 7.73618 10.0944 7.948 10.6276 7.948C11.1604 7.94721 11.671 7.73505 12.0475 7.35811C12.424 6.98117 12.6355 6.47024 12.6356 5.9375ZM9.12263 5.935C9.12263 5.099 9.79712 4.4245 10.6306 4.4245C11.4641 4.4245 12.1436 5.099 12.1436 5.935C12.1436 6.7685 11.4641 7.4455 10.6306 7.4455C9.79712 7.4455 9.12263 6.7685 9.12263 5.935Z"
+                                      fill="#0F2A80"
+                                    ></path>
+                                  </svg>
+                                  {'   '}
+                                  {chi?.genre_name}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                  )}
                 </div>
               </div>
             </>

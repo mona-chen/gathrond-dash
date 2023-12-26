@@ -10,7 +10,7 @@ const SwitchedGames = ({ user }) => {
   const { user_switched_games, loading } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    dispatch(dashboardAPI.getUserPurchase({ id: 1 }));
+    dispatch(dashboardAPI.getUserPurchase({ id: user?.id }));
   }, [user?.id]);
 
   return (

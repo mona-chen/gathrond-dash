@@ -57,6 +57,58 @@ const getUserPurchase = createAsyncThunk('/admin/user/get_user_subscription?user
   }
 });
 
+const updateUser = createAsyncThunk('/admin/user/update?user_id', async (payload, thunkAPI) => {
+  try {
+    const { data } = await axios.post(`admin/user/${payload?.url || 'update_user_info'}`, payload);
+    // console.log("stocker stor", data);
+
+    if (data.status !== 'success') {
+      toast.error(data.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data.status === 'success') {
+      toast.success(data.message);
+
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const blockUnblock = createAsyncThunk('/admin/user/update?user_id', async (payload, thunkAPI) => {
+  try {
+    const { data } = await axios.get(`admin/user/${payload?.url || 'block_user'}?user_id=${payload?.user_id}`);
+    // console.log("stocker stor", data);
+
+    if (data.status !== 'success') {
+      toast.error(data.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data.status === 'success') {
+      toast.success(data.message);
+
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
 const getUserGames = createAsyncThunk('/admin/user/get_user_games?user_id', async (payload, thunkAPI) => {
   try {
     const { data } = await axios.get(`/admin/user/get_user_games?user_id=${payload?.id ?? 0}`, payload);
@@ -944,6 +996,16 @@ export const dashboard = createSlice({
     [getPlatformSubscriptions.rejected]: (state) => {
       state.loading = false;
     },
+
+    [updateUser.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateUser.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [updateUser.rejected]: (state) => {
+      state.loading = false;
+    },
   },
 });
 
@@ -997,6 +1059,8 @@ export const dashboardAPI = {
   searchPlatformSwitches,
   searchPlatformSubscriptions,
   updatePlatformTrades,
+  updateUser,
+  blockUnblock,
 };
 
 export default dashboard.reducer;

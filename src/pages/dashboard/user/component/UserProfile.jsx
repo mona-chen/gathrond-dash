@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { dashboardAPI } from '../../../../redux/dashboard';
+import GButton from '../../../../components/common/button/Button';
+import { useDispatch, useSelector } from 'react-redux';
 
 function UserProfile({ chi }) {
   const [formData, setFormData] = useState({});
@@ -7,12 +10,45 @@ function UserProfile({ chi }) {
     setFormData(chi);
   }, [chi]);
 
+  const { loading } = useSelector((state) => state.dashboard);
+  const dispatch = useDispatch();
+
   function handleChange(e) {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
   }
+
+  async function handleUpdate(e) {
+    const resp = await dispatch(
+      dashboardAPI.updateUser({ ...formData, user_id: formData?.id, switch: formData?.all_switch }),
+    );
+    e.preventDefault();
+    if (resp?.payload?.status === 'success') {
+    }
+  }
+
+  async function handleBlock(e) {
+    const resp = await dispatch(
+      dashboardAPI.blockUnblock({ ...formData, user_id: formData?.id, switch: formData?.switch }),
+    );
+
+    if (resp?.payload?.status === 'success') {
+    }
+  }
+
+  async function handleUnblock(e) {
+    const resp = await dispatch(
+      dashboardAPI.blockUnblock({ ...formData, user_id: formData?.id, switch: formData?.switch, url: 'unblock_user' }),
+    );
+
+    if (resp?.payload?.status === 'success') {
+    }
+  }
+
+  console.log(formData);
+
   return (
     <div className="container-fluid content-inner pb-0">
       <div>
@@ -30,7 +66,10 @@ function UserProfile({ chi }) {
                     <div className="profile-img-edit position-relative">
                       <img
                         className="img-fluid avatar avatar-100 avatar-rounded"
-                        src="https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg"
+                        src={
+                          formData?.user_image ||
+                          'https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'
+                        }
                         alt="profile-pic"
                       />
                       <div className="upload-icone bg-primary">
@@ -65,7 +104,7 @@ function UserProfile({ chi }) {
                     </div>
 
                     <div className="row">
-                      <small className="form-label">{chi?.all_switch}Switches</small>
+                      <small className="form-label">{chi?.all_switch} Switches</small>
                     </div>
                   </div>
                 </form>
@@ -77,7 +116,15 @@ function UserProfile({ chi }) {
               <div className="card-header d-flex justify-content-between">
                 <div className="justify-content-between d-flex w-100 col">
                   <h4 className="card-title">Profile Information</h4>
-                  <button className="btn btn-primary">Block User</button>
+                  <GButton
+                    loading={loading}
+                    onClick={() => {
+                      formData?.blocked === 0 ? handleBlock() : handleUnblock();
+                    }}
+                    className="btn btn-primary bg-danger border-danger"
+                  >
+                    {formData?.blocked === 0 ? 'Block User' : 'Unblock User'}
+                  </GButton>
                 </div>
               </div>
               <div className="card-body">
@@ -123,13 +170,13 @@ function UserProfile({ chi }) {
                           placeholder="Street Address 1"
                         />
                       </div>
-                      <div className="form-group col-md-6">
+                      {/* <div className="form-group col-md-6">
                         <label className="form-label" htmlFor="add2">
                           Street Address 2:
                         </label>
                         <input type="text" className="form-control" id="add2" placeholder="Street Address 2" />
-                      </div>
-                      <div className="form-group col-md-6">
+                      </div> */}
+                      {/* <div className="form-group col-md-6">
                         <label className="form-label" htmlFor="cname">
                           State:
                         </label>
@@ -141,7 +188,7 @@ function UserProfile({ chi }) {
                           id="state"
                           placeholder="e.g Lagos"
                         />
-                      </div>
+                      </div> */}
                       <div className="form-group col-md-6">
                         <label className="form-label" htmlFor="cname">
                           Switches:
@@ -185,9 +232,9 @@ function UserProfile({ chi }) {
                       </label>
                     </div>
   */}
-                    <button type="submit" className="btn btn-primary">
+                    <GButton loading={loading} onClick={handleUpdate} className="btn btn-primary">
                       Update Information
-                    </button>
+                    </GButton>
                   </form>
                 </div>
               </div>
