@@ -112,7 +112,7 @@ const Homepage = () => {
               </div>
               <div class="col glass-morph border-1 ">
                 <div class="card bg-transparent ">
-                  <div class="card-header bg-transparent">Game Switches</div>
+                  <div class="card-header bg-transparent">Pending Switches</div>
                   <div class="card-body bg-transparent">
                     <h1 class="card-title display-6 ">{dashboard_summary?.total_game_switch}</h1>
                     {/* <p className='opacity-0'>d</p> */}

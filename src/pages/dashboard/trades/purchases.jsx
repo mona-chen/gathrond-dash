@@ -126,6 +126,7 @@ function Purchases() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  console.log(editData, 'edid');
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -170,6 +171,7 @@ function Purchases() {
                         <thead class="">
                           <tr>
                             <th>Game Name</th>
+                            <th>User</th>
                             <th>Category</th>
                             <th>Amount</th>
                             <th>Description</th>
@@ -196,6 +198,10 @@ function Purchases() {
                                     <p>{chi?.game_name}</p>
                                   </div>
                                 </td>
+
+                                <td>
+                                  <p>{chi?.firstname ?? '' + ' ' + chi?.lastname ?? '-'}</p>
+                                </td>
                                 <td>
                                   <div className="d-flex justify-content-start flex-column align-items-start">
                                     <small className="">{chi?.category}</small>
@@ -218,7 +224,12 @@ function Purchases() {
                                   <div className="d-flex gap-4">
                                     <figure
                                       onClick={() => {
-                                        setEditData({ ...chi, game_id: chi.id, game_type_id: chi.game_type });
+                                        setEditData({
+                                          ...chi,
+                                          game_id: chi.id,
+                                          game_type_id: chi.game_type,
+                                          usern: chi?.firstname ?? '' + ' ' + chi?.lastname ?? '-',
+                                        });
                                         setShowUpdateModal(true); //
                                       }}
                                       data-bs-toggle="tooltip"
@@ -252,6 +263,7 @@ function Purchases() {
                                           gameName: chi?.game_name,
                                           invoice_id: chi?.invoice_id,
                                           phone: chi?.phone,
+                                          usern: chi?.firstname ?? '' + ' ' + chi?.lastname ?? '-',
                                         });
                                         setDetailsModal(true); //
                                       }}
@@ -342,6 +354,7 @@ function Purchases() {
         show={detailsModal}
         transactionDetails={{
           'Game Name': editData?.gameName,
+          'User ': editData?.usern,
           'Account Name ': editData?.meta_data ? JSON.parse(editData?.meta_data)?.account_name : '',
           'Account NO ': editData?.receiving_account_number,
           'Bank ': editData?.bank_name,
