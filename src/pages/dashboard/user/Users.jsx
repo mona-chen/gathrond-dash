@@ -18,7 +18,6 @@ function Users() {
   const [querySearch, setQuerySearch] = useState('');
   const { dashboard_summary, users, loading } = useSelector((state) => state.dashboard);
 
-
   useEffect(() => {
     dispatch(dashboardAPI.getDashboardData());
     dispatch(dashboardAPI.getUsers());
@@ -129,6 +128,7 @@ function Users() {
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Switches</th>
+                            <th>Status</th>
                             <th>Joined</th>
                           </tr>
                         </thead>
@@ -148,6 +148,7 @@ function Users() {
                                 <td>{chi?.email}</td>
                                 <td>{chi?.phone}</td>
                                 <td>{chi.all_switch}</td>
+                                <td>{chi.blocked === 0 ? 'Active' : 'Blocked'}</td>
                                 <td>{formatDateTime(chi?.created_at)}</td>
                               </tr>
                             );

@@ -47,8 +47,6 @@ function UserProfile({ chi }) {
     }
   }
 
-  console.log(formData);
-
   return (
     <div className="container-fluid content-inner pb-0">
       <div>
