@@ -914,6 +914,36 @@ export const dashboard = createSlice({
     [updatePlatformTrades.rejected]: (state) => {
       state.loading = false;
     },
+
+    [getPlatformPurchasedGames.pending]: (state) => {
+      state.loading = true;
+    },
+    [getPlatformPurchasedGames.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [getPlatformPurchasedGames.rejected]: (state) => {
+      state.loading = false;
+    },
+
+    [getPlatformSwitchedGames.pending]: (state) => {
+      state.loading = true;
+    },
+    [getPlatformSwitchedGames.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [getPlatformSwitchedGames.rejected]: (state) => {
+      state.loading = false;
+    },
+
+    [getPlatformSubscriptions.pending]: (state) => {
+      state.loading = true;
+    },
+    [getPlatformSubscriptions.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [getPlatformSubscriptions.rejected]: (state) => {
+      state.loading = false;
+    },
   },
 });
 

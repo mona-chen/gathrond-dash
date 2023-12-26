@@ -328,7 +328,7 @@ function Category() {
         <div class="row  row-cols-1 row-cols-md-1 g-4">
           <div class="col">
             <div class="card">
-              <img ref={editImageRef} className="rounded-top" src={editData.image} alt="" />
+              <img ref={editImageRef} className="rounded-top" src={editData.image_url} alt="" />
               <div class="card-body">
                 <form>
                   <div class="mb-3">
