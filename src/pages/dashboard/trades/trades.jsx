@@ -151,9 +151,7 @@ function Trades() {
                                 <td>{symbol('ngn') + formatNumWithComma(chi?.amount, 'ngn')}</td>
                                 <td>{meta?.session_id}</td>
                                 <td>
-                                  <div className={`order-status ${chi?.order_status === 1 ? 'approved' : ''}`}>
-                                    {chi?.order_status === 0 ? 'Pending' : 'Approved'}
-                                  </div>
+                                  <div className={`order-status ${'approved'}`}>{'Approved'}</div>
                                 </td>
                                 <td>{formatDateTime(chi.created_at)}</td>
                                 <td>
