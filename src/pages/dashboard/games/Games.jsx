@@ -239,7 +239,7 @@ function Games() {
     dispatch(dashboardAPI.getAllGames({ url: `search_games?search_key=${e}&cursor=0&` }));
   }
 
-  console.log(editData);
+  console.log(addData);
 
   return (
     <DashboardLayout>
@@ -448,8 +448,8 @@ function Games() {
                       ]}
                       hint={'Recommended'}
                       selectOptions={[
-                        { label: 'Yes', value: 0 },
-                        { label: 'No', value: 1 },
+                        { label: 'Yes', value: 1 },
+                        { label: 'No', value: 0 },
                       ]}
                       type={'select'}
                     />
@@ -586,8 +586,8 @@ function Games() {
                       ]}
                       hint={'Recommended'}
                       selectOptions={[
-                        { label: 'Yes', value: 0 },
-                        { label: 'No', value: 1 },
+                        { label: 'Yes', value: 1 },
+                        { label: 'No', value: 0 },
                       ]}
                       type={'select'}
                     />
