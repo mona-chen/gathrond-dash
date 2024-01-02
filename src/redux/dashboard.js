@@ -478,17 +478,17 @@ const updateItem = createAsyncThunk('update_item', async (payload, thunkAPI) => 
 
 const addItem = createAsyncThunk('add_item', async (payload, thunkAPI) => {
   try {
-    const { data } = await axios.post(`admin/game/add_${payload.type}`, payload.data);
+    const data = await axios.post(`admin/game/add_${payload.type}`, payload.data);
 
-    if (data.status !== 'success') {
-      toast.error(data.message, {
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.message, {
         // theme: 'colored'
       });
-      return data;
+      return data?.data;
     }
-    if (data.status === 'success') {
-      toast.success(data.message);
-      return data;
+    if (data?.data?.status === 'success') {
+      toast.success(data?.data?.message);
+      return data?.data;
     }
   } catch (err) {
     toast.error(err);

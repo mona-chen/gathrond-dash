@@ -149,35 +149,25 @@ function Genre() {
   }
 
   async function handleAddSubmit() {
-    setUploading(true);
-    const resp = await fileManager.upload(dispatch, addImage);
+    const resp = await dispatch(
+      dashboardAPI.addItem({
+        type: 'genre',
+        data: addData,
+      }),
+    );
 
     genres.reset();
-    if (resp) {
-      setUploading(false);
 
-      const resp2 = await dispatch(
-        dashboardAPI.addItem({
-          type: 'genres',
-          data: { ...addData, image_key: resp.key },
-        }),
-      );
+    if (resp?.payload?.status === 'success') {
+      setAddData({
+        genre_name: '',
+        image_key: '',
+      });
+      setAddImage('');
+      setAddGame(false);
 
-      if (resp2.payload?.status === 'success') {
-        setAddData({
-          genre_name: '',
-          image_key: '',
-        });
-
-        setAddImage('');
-
-        if (resp.payload?.status === 'success') {
-          dispatch(dashboardAPI.getGenre());
-          dispatch(dashboardAPI.getCategory());
-        }
-      }
-    } else {
-      setUploading(false);
+      dispatch(dashboardAPI.getGenre());
+      dispatch(dashboardAPI.getCategory());
     }
   }
   async function handleDelete(id) {
@@ -185,14 +175,6 @@ function Genre() {
 
     if (resp.payload?.status === 'success') {
       setDeleteModal(false);
-    }
-  }
-
-  function disabledAlgoAdd(data) {
-    if (!addImage) {
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -358,14 +340,14 @@ function Genre() {
               <img ref={editImageRef} className="rounded-top" src={editData.image_url} alt="" />
               <div class="card-body">
                 <form>
-                  <div class="mb-3">
+                  {/* <div class="mb-3">
                     <GInput
                       id="image"
                       hint={'Genre Image'}
                       onChange={(e) => fileManager.onChange(e, editImageRef, setEditImage)}
                       type={'file'}
                     />
-                  </div>
+                  </div> */}
                   <div class="mb-3">
                     <GInput onChange={handleChange} value={editData?.genre_name} id="genre_name" hint={'Genre Name'} />
                   </div>
@@ -391,14 +373,14 @@ function Genre() {
               <img ref={addImageRef} className="rounded-top" src={addData.image} alt="" />
               <div class="card-body">
                 <form>
-                  <div class="mb-3">
+                  {/* <div class="mb-3">
                     <GInput
                       id="image"
                       hint={'Genre Image'}
                       onChange={(e) => fileManager.onChange(e, addImageRef, setAddImage)}
                       type={'file'}
                     />
-                  </div>
+                  </div> */}
                   <div class="mb-3">
                     <GInput
                       onChange={handleAddChange}

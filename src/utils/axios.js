@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { getCookie } from './helper/Helper';
 
-const API = 'https://staging.gathrone.us';
+const API = 'https://api.gathrone.us';
 
 /** base url to make request to the BE end point */
 
