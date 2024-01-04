@@ -239,8 +239,6 @@ function Games() {
     dispatch(dashboardAPI.getAllGames({ url: `search_games?search_key=${e}&cursor=0&` }));
   }
 
-  console.log(addData);
-
   return (
     <DashboardLayout>
       <div class="container-fluid content-inner pb-0">
@@ -448,6 +446,7 @@ function Games() {
                       ]}
                       hint={'Recommended'}
                       selectOptions={[
+                        { label: 'Click to Select', value: 12 },
                         { label: 'Yes', value: 1 },
                         { label: 'No', value: 0 },
                       ]}
@@ -586,6 +585,7 @@ function Games() {
                       ]}
                       hint={'Recommended'}
                       selectOptions={[
+                        { label: 'Click to Select', value: 12 },
                         { label: 'Yes', value: 1 },
                         { label: 'No', value: 0 },
                       ]}
