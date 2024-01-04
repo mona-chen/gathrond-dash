@@ -481,7 +481,7 @@ const addItem = createAsyncThunk('add_item', async (payload, thunkAPI) => {
     const data = await axios.post(`admin/game/add_${payload.type}`, payload.data);
 
     if (data?.data?.status !== 'success') {
-      toast.error(data?.message, {
+      toast.error(data?.data?.message, {
         // theme: 'colored'
       });
       return data?.data;
@@ -494,7 +494,7 @@ const addItem = createAsyncThunk('add_item', async (payload, thunkAPI) => {
     toast.error(err);
     console.log(err);
 
-    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    if (err.response?.data.status === 'fail' && err.response.status !== 401) {
     }
     return err;
   }
