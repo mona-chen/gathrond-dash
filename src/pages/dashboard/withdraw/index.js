@@ -182,7 +182,7 @@ const WithdrawalScreen = () => {
             <GButton
               loading={loading}
               variant="primary"
-              onClick={dashboard_summary?.admin_id === 1 && handleWithdrawal}
+              onClick={dashboard_summary?.admin_id === 1 && handleWithdrawal()}
             >
               Send
             </GButton>
