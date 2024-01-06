@@ -753,6 +753,81 @@ const updatePlatformTrades = createAsyncThunk(`update_order_status`, async (payl
     }
   } catch (err) {
     toast.error(err);
+    // console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const getBankLists = createAsyncThunk(`admin/transfer/get_bank_lists`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(`admin/transfer/get_bank_list`, payload);
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data?.data?.message);
+      await thunkAPI.dispatch(setBankList(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    // console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const getTransactions = createAsyncThunk(`admin/transfer/get_transfer_tranx`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.get(`admin/transfer/get_transfer_tranx`, payload);
+
+    if (data?.data?.status !== 'success') {
+      // toast.error(data?.data?.message, {
+      //   // theme: 'colored'
+      // });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data?.data?.message);
+      await thunkAPI.dispatch(setTransactions(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    // console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const sendMoney = createAsyncThunk(`/transfer/make_transfer`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.post(`admin/transfer/make_transfer`, payload);
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      toast.success(data?.data?.message);
+      // await thunkAPI.dispatch(setBankList(data.data?.data));
+      return data.data;
+    }
+  } catch (err) {
+    toast.error(err);
     console.log(err);
 
     if (err.response.data.status === 'fail' && err.response.status !== 401) {
@@ -761,6 +836,55 @@ const updatePlatformTrades = createAsyncThunk(`update_order_status`, async (payl
   }
 });
 
+const resolveAccountNo = createAsyncThunk(`/transfer/resolve_account`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.post(`admin/transfer/resolve_account`, payload);
+
+    if (data?.data?.status !== 'success') {
+      // toast.error(data?.data?.message, {
+      //   // theme: 'colored'
+      // });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      // toast.success(data?.data?.message);
+      // await thunkAPI.dispatch(setBankList(data.data?.data));
+      return data.data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
+
+const makeTransfer = createAsyncThunk(`/transfer/make_transfer`, async (payload, thunkAPI) => {
+  try {
+    const data = await axios.post(`/transfer/make_transfer'}`, payload);
+
+    if (data?.data?.status !== 'success') {
+      toast.error(data?.data?.message, {
+        // theme: 'colored'
+      });
+      return data;
+    }
+    if (data?.data?.status === 'success') {
+      toast.success(data?.data?.message);
+      // await thunkAPI.dispatch(setBankList(data.data?.data));
+      return data;
+    }
+  } catch (err) {
+    toast.error(err);
+    console.log(err);
+
+    if (err.response.data.status === 'fail' && err.response.status !== 401) {
+    }
+    return err;
+  }
+});
 export const dashboard = createSlice({
   name: 'dashboard',
   initialState: {
@@ -777,16 +901,21 @@ export const dashboard = createSlice({
     inStock: [],
     all_user_games: [],
     all_messages: [],
+    transactions: [],
     messages: [],
     game_types: [],
     socket_events: [],
     all_subscriptions: [],
     all_switches: [],
     all_purchases: [],
+    bank_list: [],
   },
   reducers: {
     setInStock: (state, action) => {
       state.inStock = action.payload;
+    },
+    setTransactions: (state, action) => {
+      state.transactions = action.payload;
     },
     setDashboardSummary: (state, action) => {
       state.dashboard_summary = action.payload;
@@ -841,6 +970,9 @@ export const dashboard = createSlice({
     },
     setPlatformPurchases: (state, action) => {
       state.all_purchases = action.payload;
+    },
+    setBankList: (state, action) => {
+      state.bank_list = action.payload;
     },
   },
   extraReducers: {
@@ -1006,6 +1138,25 @@ export const dashboard = createSlice({
     [updateUser.rejected]: (state) => {
       state.loading = false;
     },
+    [sendMoney.pending]: (state) => {
+      state.loading = true;
+    },
+    [sendMoney.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [sendMoney.rejected]: (state) => {
+      state.loading = false;
+    },
+
+    [resolveAccountNo.pending]: (state) => {
+      state.loading = true;
+    },
+    [resolveAccountNo.fulfilled]: (state) => {
+      state.loading = false;
+    },
+    [resolveAccountNo.rejected]: (state) => {
+      state.loading = false;
+    },
   },
 });
 
@@ -1018,6 +1169,7 @@ export const {
   setInStock,
   setAllGames,
   setUsers,
+  setTransactions,
   setGenres,
   setCategories,
   setGameType,
@@ -1029,6 +1181,7 @@ export const {
   setAllSubscriptions,
   setPlatformSwitches,
   setPlatformPurchases,
+  setBankList,
 } = dashboard.actions;
 
 export const dashboardAPI = {
@@ -1061,6 +1214,11 @@ export const dashboardAPI = {
   updatePlatformTrades,
   updateUser,
   blockUnblock,
+  getBankLists,
+  sendMoney,
+  resolveAccountNo,
+  makeTransfer,
+  getTransactions,
 };
 
 export default dashboard.reducer;

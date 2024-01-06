@@ -65,6 +65,12 @@ export const sideMenuList = [
         link: '/platform-purchases',
         // icon: walletBalanceIcon,
       },
+
+      {
+        name: 'Withdraw',
+        link: '/withdrawal',
+        // icon: walletBalanceIcon,
+      },
     ],
   },
 ];

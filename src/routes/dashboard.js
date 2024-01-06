@@ -9,6 +9,7 @@ import UserGames from '../pages/dashboard/games/components/UserGames';
 import Trades from '../pages/dashboard/trades/trades';
 import Switches from '../pages/dashboard/trades/switches';
 import Purchases from '../pages/dashboard/trades/purchases';
+import WithdrawalScreen from '../pages/dashboard/withdraw';
 
 export const dashboard_routes = [
   {
@@ -53,5 +54,10 @@ export const dashboard_routes = [
   {
     path: '/platform-purchases',
     element: Purchases,
+  },
+
+  {
+    path: '/withdrawal',
+    element: WithdrawalScreen,
   },
 ];
