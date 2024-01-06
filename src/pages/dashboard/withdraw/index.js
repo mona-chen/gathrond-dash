@@ -113,7 +113,7 @@ const WithdrawalScreen = () => {
                   <tr key={transaction.id}>
                     <td>{transaction.id}</td>
                     <td>{formatDateTime(transaction.created_at)}</td>
-                    <td>${formatNumWithComma(transaction?.amount, 'ngn')}</td>
+                    <td>NGN {formatNumWithComma(transaction?.amount, 'ngn')}</td>
                     <td>{transaction.account_name + ' - ' + transaction.bank_name}</td>
                   </tr>
                 ))}
