@@ -30,9 +30,7 @@ const DashboardLayout = ({ children, loading }) => {
     }
   }, []);
 
-  const socket = new WebSocket(
-    'wss://free.blr2.piesocket.com/v3/1?api_key=MKiPuDQ31fMrusf9JsuwNKYnyGeTfEmP3w8YfXMq&notify_self=1',
-  );
+  const socket = new WebSocket('wss://socketsbay.com/wss/v2/1/demo/');
 
   useEffect(() => {
     // Connection opened

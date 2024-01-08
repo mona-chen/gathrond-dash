@@ -8,6 +8,7 @@ import Select from 'react-select';
 import { debounce, formatDateTime, formatNumWithComma, reactSelectStyle } from '../../../utils/helper/Helper';
 import './index.css';
 import GButton from '../../../components/common/button/Button';
+import { toast } from '../../../components/common/toast/toast';
 const WithdrawalScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedBank, setSelectedBank] = useState({});
@@ -17,19 +18,25 @@ const WithdrawalScreen = () => {
   const dispatch = useDispatch();
 
   const handleWithdrawal = async () => {
-    const resp = await dispatch(
-      dashboardAPI.sendMoney({
-        account_number: formData?.account_number,
-        amount: formData?.amount,
-        bank_code: selectedBank.value,
-        bank_id: formData?.bank_Id,
-        client_id: formData?.client_Id,
-        ...formData,
-      }),
-    );
+    if (dashboard_summary?.super_admin === 1) {
+      const resp = await dispatch(
+        dashboardAPI.sendMoney({
+          account_number: formData?.account_number,
+          amount: formData?.amount,
+          bank_code: selectedBank.value,
+          bank_id: formData?.bank_Id,
+          client_id: formData?.client_Id,
+          ...formData,
+        }),
+      );
 
-    if (resp.payload?.status === 'success') {
-      handleClose();
+      if (resp.payload?.status === 'success') {
+        handleClose();
+      }
+    } else {
+      toast.error('You are not authorized', {
+        // theme: 'colored'
+      });
     }
   };
   // const transactions = [
@@ -68,14 +75,12 @@ const WithdrawalScreen = () => {
 
       if (resp.payload?.status === 'success') {
         setValidatedName(resp.payload.data.account_name);
-        console.log(formData);
 
         setFormData({ ...formData, ...resp.payload.data });
       }
     }
   }, 500);
 
-  console.log(transactions);
   return (
     <DashboardLayout>
       <div className="container mt-5">
@@ -157,12 +162,16 @@ const WithdrawalScreen = () => {
                   onChange={(e) => {
                     validateAccount(e);
                     setValidatedName('');
+
                     setFormData({
                       ...formData,
                       account_number: e.target.value,
                     });
                   }}
                   type="text"
+                  pattern="[0-9]"
+                  maxLength={10}
+                  value={formData?.account_number}
                   placeholder="Enter account number"
                 />
 
@@ -179,11 +188,7 @@ const WithdrawalScreen = () => {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <GButton
-              loading={loading}
-              variant="primary"
-              onClick={dashboard_summary?.admin_id === 1 && handleWithdrawal()}
-            >
+            <GButton loading={loading} variant="primary" onClick={handleWithdrawal}>
               Send
             </GButton>
           </Modal.Footer>
