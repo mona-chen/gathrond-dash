@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logoIcon from '../../../assets/images/logoIcon.svg';
 import logo from '../../../assets/images/logo.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { sideMenuList } from './sidebarList';
 import { capitalizeFirstLetter } from '../../../utils/helper/Helper';
+import { useDispatch, useSelector } from 'react-redux';
+import { dashboardAPI } from '../../../redux/dashboard';
 
 function Sidebar() {
   const sidebarToggle = () => {
@@ -19,9 +21,36 @@ function Sidebar() {
 
   const location = useLocation();
 
+  const dispatch = useDispatch();
+
   const isActive = (e) => {
     return location.pathname.includes(e);
   };
+
+  const { dashboard_summary } = useSelector((state) => state.dashboard);
+
+  useEffect(() => {
+    dispatch(dashboardAPI.getDashboardData());
+  }, []);
+
+  console.log(
+    sideMenuList.filter((item) => {
+      if (item.name?.children) {
+        const hasWithdrawInChildren = item.name.children.name.toLowerCase().trim() === 'withdraw';
+        console.log(
+          `Item: ${item.name}, Children: ${JSON.stringify(
+            item.name.children,
+          )}, Has Withdraw in Children: ${hasWithdrawInChildren}`,
+        );
+        return hasWithdrawInChildren;
+      } else {
+        const isWithdrawTopLevel = item.name && item.name.toLowerCase() === 'withdraw';
+        console.log(`Item: ${item.name}, Is Withdraw Top Level: ${isWithdrawTopLevel}`);
+        return isWithdrawTopLevel;
+      }
+    }),
+  );
+
   return (
     <aside className="sidebar sidebar-default sidebar-dark navs-gradient sidebar-mini sidebar-hover ">
       <div className="sidebar-header d-flex align-items-center justify-content-start">

@@ -257,9 +257,10 @@ function Navbar() {
               >
                 <img src={avatar01} alt="User-Profile" className="img-fluid avatar avatar-50 avatar-rounded" />
                 <div className="caption ms-3 ">
-                  <h6 className="mb-0 caption-title">Confidence Wanoghoco</h6>
+                  <h6 className="mb-0 caption-title">Gathrone Games</h6>
                   <p className="mb-0 caption-sub-title">Super Admin</p>
                 </div>
+                ``
               </a>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 {/* <li className="border-0">
