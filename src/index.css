@@ -1,0 +1,101 @@
+body,
+* {
+  font-family: sora !important ;
+}
+
+#chat3 .form-control {
+  border-color: transparent;
+}
+
+#chat3 .form-control:focus {
+  border-color: transparent;
+  box-shadow: inset 0px 0px 0px 1px transparent;
+}
+
+.badge-dot {
+  border-radius: 50%;
+  height: 10px;
+  width: 10px;
+  margin-left: 2.9rem;
+  margin-top: -0.75rem;
+}
+
+.chat-scroll-container {
+  height: 80vh;
+  min-height: 60vh;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.chat-scroll {
+  height: 90%;
+  width: 100%;
+  margin-bottom: 5rem;
+  position: relative;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.main-content {
+  overflow: hidden !important;
+  height: 100vh;
+}
+
+/* Add this to your CSS */
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Apply the animation to the chat message */
+.chat-message-enter {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Optionally add a delay to stagger the animations for multiple messages */
+.chat-message-enter-delay-1 {
+  animation-delay: 0.1s;
+}
+
+/* Add more delay classes if needed */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.order-status {
+  padding: 8px 20px;
+  border-radius: 72px;
+  color: orange;
+  background-color: rgba(255, 166, 0, 0.215);
+}
+
+.approved {
+  padding: 8px 20px;
+  border-radius: 72px;
+  color: greenyellow;
+  background-color: rgba(172, 255, 47, 0.245);
+}
+
+.custom-scroll {
+  overflow-y: auto;
+  height: 100%;
+  max-height: 20rem;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
